@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Home{% endblock %} | Sistema F1</title>
+    <meta name="description" content="{% block description %}Sistema de Fórmula 1 para o trabalho de Lab BD{% endblock description %}"/>
+    <link rel="stylesheet" href="/assets/{{ version() }}/style.css" />
+    <link rel="icon" href="data:,"> {# Desabilitar favicon pra evitar o 404 #}
+  </head>
+  <body>
+    <nav class="container-fluid">
+      <ul>
+        <li><a href="/">Sistema F1</a></li>
+      </ul>
+      <ul>
+        <li>
+          {# Botão de log in/log out #}
+          {% if loggedin %}
+            <a href="/logout">Log out</a>
+          {% else %}
+            <a href="/login">Log in</a>
+          {% endif %}
+        </li>
+      </ul>
+    </nav>
+
+    <main class="container">
+      {# Mensagem de aviso/erro, também conhecido como "flash" #}
+      {% if flash %}
+        <div id="flash" class="{{ flash.kind }}">
+          <sup onclick="document.getElementById('flash').remove()">
+            {{ flash.message }}
+          </sub>
+        </div>
+      {% endif %}
+
+      {# Aqui vem o conteúdo principal #}
+      {% block content %}
+      {% endblock content %}
+    </main>
+
+    <footer class="container">
+      <p>
+        Desenvolvido para o projeto da disciplina SCC0541 em 2022/1
+      </p>
+      <p>
+        <a href="https://github.com/Misterio77/SCC0541-Lab-BD-Projeto">Código fonte</a>
+      </p>
+    </footer>
+  </body>
+</html>

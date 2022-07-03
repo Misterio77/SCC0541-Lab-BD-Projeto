@@ -1,4 +1,8 @@
-use projeto_labbd::{common::style::StyleSheet, database::Database, routes::assets};
+use projeto_labbd::{
+    common::{style::StyleSheet, tera::customize},
+    database::Database,
+    routes::{assets, home},
+};
 
 use anyhow::Result;
 
@@ -11,13 +15,14 @@ static STYLE: &str = include_str!(concat!(env!("OUT_DIR"), "/style.css"));
 #[rocket::main]
 async fn main() -> Result<()> {
     let rocket = rocket::build()
-        // Middlewares (conexão com database e template engine)
+        // Middlewares (conexão com database e instância da template engine)
         .attach(Database::init())
-        .attach(Template::fairing())
+        .attach(Template::custom(customize))
         // Gerenciar a folha CSS pra ser servida
         .manage(StyleSheet::new(STYLE, 86400))
         // Rotas
-        .mount("/assets", assets::routes());
+        .mount("/assets", assets::routes())
+        .mount("/", home::routes());
 
     rocket.launch().await.ok();
     Ok(())

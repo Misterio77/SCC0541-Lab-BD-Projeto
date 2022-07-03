@@ -1,9 +1,11 @@
-// Import Pico source
+// Usamos a sheet Pico.css como base, é bem show de bola
 @import "pico/pico";
-// Import theme
+// Aqui temos o nosso tema, que define cores, formatos, etc
 @import "theme/projetobd";
 
-// Disable link on current page
+// Essa sheet contém personalizações de apresentação e estilização de alguns elementos especializados
+
+// Desabilitar o link quando ele tem aria-current=page (ou seja, marcado como a página atual)
 [aria-current=page] {
   pointer-events: none;
   cursor: default;
@@ -11,39 +13,52 @@
   color: unset;
 }
 
-// Set selection color
+// Acertar cor de seleção
 ::selection {
   background: var(--primary-hover);
 }
 
-// Style navbar
+// Barra de navegação
 body>nav {
+  // Adicionar sombra e background bonitinho
   box-shadow: var(--card-box-shadow);
   background-color: var(--card-sectionning-background-color);
 }
 
-// Style footer
+// Footer da página
 body>footer {
+  // Adicionar um borda bonitinha
   border-top: 1px solid var(--primary);
   padding-top: 2rem;
+  // Diminuir o tamanho da fonte
   p {
     font-size: 80%;
   }
 }
 
-// Cards
 article {
-  // Slimmer card
+  // Versão menorzinha
   &.slim {
     margin: auto;
     @media (min-width: 30em) {
       max-width: 30em;
     }
   }
+  // Adicionar mais margem
   margin-top: var(--typography-spacing-vertical);
   margin-bottom: var(--typography-spacing-vertical);
 }
 
+button {
+  // Botão, porém inline
+  &.small {
+    width: auto;
+    display: inline;
+    margin-bottom: auto;
+  }
+}
+
+// Coisinha de mensagem/aviso/erro (vulgo flash)
 #flash {
   text-align: center;
   padding-bottom: 3rem;
