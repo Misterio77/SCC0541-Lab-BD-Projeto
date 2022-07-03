@@ -1,3 +1,4 @@
 templates/*.tera linguist-language=jinja
 db/*inicial.sql linguist-vendored
-assets/pico/** linguist-vendored
+assets/pico/*.scss linguist-vendored
+assets/pico/*/*.scss linguist-vendored
