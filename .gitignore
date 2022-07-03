@@ -1,0 +1,6 @@
+*.pdf
+
+# nix build
+result
+# cargo build
+target
