@@ -18,6 +18,9 @@ features = [ "tera" ]
 version = "0.1.0-rc.2"
 features = [ "deadpool_postgres" ]
 
+[dependencies.anyhow]
+version = "1.0"
+
 [build-dependencies.grass]
 version = "0.10"
 default-features = false

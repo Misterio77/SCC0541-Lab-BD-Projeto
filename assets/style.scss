@@ -1,7 +1,7 @@
-// Import full Pico source code
-@import "pico/scss/pico";
+// Import Pico source
+@import "pico/pico";
 // Import theme
-@import "theme";
+@import "theme/projetobd";
 
 // Disable link on current page
 [aria-current=page] {

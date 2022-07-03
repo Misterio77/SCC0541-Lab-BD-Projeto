@@ -1,5 +1,9 @@
 [default]
+# Caminho para o diretório com os templates .tera
 template_dir = "templates"
 
 [default.databases.database]
-url = "postgresql:///misterio?user=misterio&host=/var/run/postgresql"
+# String de conexão do postgres
+# Mais info: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
+# Nesse caso está configurado para usar a base padrão local do seu usuário, pode ser alterada por variáveis de ambiente e etc
+url = "postgresql://"
