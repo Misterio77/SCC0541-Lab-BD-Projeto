@@ -1,7 +1,6 @@
 # Scripts SQL
 
-Esses scripts implementam as funcionalidades e operações requisitadas para o
-trabalho. Devem ser executados em ordem.
+Esses scripts, começando pelo `03`, implementam as funcionalidades e operações
+requisitadas para o trabalho. Devem ser executados em ordem.
 
-**ATENÇÃO**: Tenha a DDL e DML padrão da formula 1 já executadas antes de
-executar esses.
+O `01` e `02` são, respectivamente, os comandos DDL e DML providenciados no T1.
