@@ -2,7 +2,7 @@
   description = "Projeto final de Laboratório de Bases de Dados (SCC0541) - 2022/1";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     utils.url = "github:numtide/flake-utils";
   };
 

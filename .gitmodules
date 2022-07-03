@@ -1,0 +1,4 @@
+[submodule "assets/pico"]
+	path = assets/pico
+	url = https://github.com/picocss/pico.git
+	tag = v1.4.3

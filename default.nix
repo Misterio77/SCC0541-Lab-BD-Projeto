@@ -9,4 +9,9 @@ rustPlatform.buildRustPackage rec {
   src = lib.cleanSource ./.;
 
   cargoLock.lockFile = ./Cargo.lock;
+
+  postInstall = ''
+    mkdir -p $out/etc
+    cp -r templates db $out/etc
+  '';
 }

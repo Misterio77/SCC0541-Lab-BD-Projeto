@@ -6,6 +6,9 @@ TODO
 
 ## Como executar
 
+Depois de clonar, certifique-se de executar `git submodule init && git
+submodule update` para clonar os submódulos.
+
 TODO
 
 ## Sobre stack

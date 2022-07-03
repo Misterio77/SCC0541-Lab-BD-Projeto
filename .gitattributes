@@ -1,0 +1,2 @@
+templates/*.tera linguist-language=jinja
+assets/pico/** linguist-vendored

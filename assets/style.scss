@@ -1,0 +1,67 @@
+// Import full Pico source code
+@import "pico/scss/pico";
+// Import theme
+@import "theme";
+
+// Disable link on current page
+[aria-current=page] {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: unset;
+}
+
+// Set selection color
+::selection {
+  background: var(--primary-hover);
+}
+
+// Style navbar
+body>nav {
+  box-shadow: var(--card-box-shadow);
+  background-color: var(--card-sectionning-background-color);
+}
+
+// Style footer
+body>footer {
+  border-top: 1px solid var(--primary);
+  padding-top: 2rem;
+  p {
+    font-size: 80%;
+  }
+}
+
+// Cards
+article {
+  // Slimmer card
+  &.slim {
+    margin: auto;
+    @media (min-width: 30em) {
+      max-width: 30em;
+    }
+  }
+  margin-top: var(--typography-spacing-vertical);
+  margin-bottom: var(--typography-spacing-vertical);
+}
+
+#flash {
+  text-align: center;
+  padding-bottom: 3rem;
+  sup {
+    background-color: var(--primary);
+    color: var(--primary-inverse);
+    font-weight: bold;
+    border-radius: 0.2rem;
+    margin: 0.2rem;
+    padding: 0.4rem 0.5rem;
+  }
+  &.success sup {
+    background-color: var(--success-color);
+  }
+  &.error sup {
+    background-color: var(--error-color);
+  }
+  &.warning sup {
+    background-color: var(--warn-color);
+  }
+}
