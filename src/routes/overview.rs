@@ -23,10 +23,12 @@ pub async fn overview_admin(
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
     let admin = Admin::from_user(&db, &user).await?;
+    let metrics = admin.get_metrics(&db).await?;
     let display_name = "Admin";
+
     Ok(Template::render(
         "overview-admin",
-        context! {display_name,user,flash},
+        context! {display_name,user,flash,metrics},
     ))
 }
 
@@ -36,7 +38,7 @@ pub async fn overview_driver(
     flash: Option<FlashMessage<'_>>,
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    let driver = Driver::from_user(&db, &user).await?;
+    // let driver = Driver::from_user(&db, &user).await?;
     let display_name = "Driver X";
     Ok(Template::render(
         "overview-driver",
@@ -50,7 +52,7 @@ pub async fn overview_constructor(
     flash: Option<FlashMessage<'_>>,
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    let constructor = Constructor::from_user(&db, &user).await?;
+    // let constructor = Constructor::from_user(&db, &user).await?;
     let display_name = "Constructor Y";
     Ok(Template::render(
         "overview-constructor",

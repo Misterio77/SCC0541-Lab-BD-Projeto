@@ -1,5 +1,40 @@
 {% extends "overview" %}
 
-{% block dashboard %}
-Ademiro
-{% endblock dashboard %}
+{% block metrics %}
+<article>
+  <hgroup>
+    <h2>Pilotos</h2>
+    <p>Total cadastrados</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.drivers }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h2>Escuderias</h2>
+    <p>Total cadastradas</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.constructors }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h2>Corridas</h2>
+    <p>Total cadastradas</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.races }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h2>Temporadas</h2>
+    <p>Total cadastradas</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.seasons }}
+  </div>
+</article>
+{% endblock metrics %}

@@ -58,4 +58,26 @@
       </p>
     </footer>
   </body>
+  <button hidden id="back-to-top" onclick="backToTop()" title="Voltar ao topo">
+    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M14,20H10V11L6.5,14.5L4.08,12.08L12,4.16L19.92,12.08L17.5,14.5L14,11V20Z" />
+    </svg>
+  </button>
+  <script>
+    let rootElement = document.documentElement;
+    let backToTopButton = document.getElementById("back-to-top");
+
+    function backToTop() {
+      rootElement.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      })
+    }
+
+    function watchScroll() {
+      let y = window.scrollY;
+      backToTopButton.hidden = (window.scrollY < 200);
+    }
+    window.addEventListener("scroll", watchScroll);
+  </script>
 </html>

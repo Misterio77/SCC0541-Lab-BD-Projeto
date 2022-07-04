@@ -4,12 +4,51 @@
 {% block description %}Sua dashboard{% endblock %}
 
 {% block content %}
-<article>
+
+<header>
   <hgroup>
     <h1>Overview - {{ user.kind | default(value="Admin") }}</h1>
-    <p>Boas vindas, {{ display_name }}</p>
+    <p>Boas vindas, <strong>{{ display_name }}</strong>, a sua dashboard.</p>
   </hgroup>
+  <nav>
+    <ul>
+      <li><a href="#metrics">Métricas</a></li>
+      <li><a href="#actions">Ações</a></li>
+      <li><a href="#reports">Relatórios</a></li>
+    </ul>
+  </nav>
+</header>
+
+<hr/>
+
+<article>
+  <header>
+    <h2 id="metrics"><a href="#metrics">#</a> Métricas</h2>
+  </header>
+  <div class="grid">
+    {% block metrics %}
+    {% endblock metrics %}
+  </div>
 </article>
-{% block dashboard %}
-{% endblock dashboard %}
+
+<article>
+  <header>
+    <h2 id="actions"><a href="#actions">#</a> Ações</h2>
+  </header>
+  <div class="grid">
+    {% block actions %}
+    {% endblock actions %}
+  </div>
+</article>
+
+<article>
+  <header>
+    <h2 id="reports"><a href="#reports">#</a> Relatórios</h2>
+  </header>
+  <div class="grid">
+    {% block reports %}
+    {% endblock reports %}
+  </div>
+</article>
+
 {% endblock content %}

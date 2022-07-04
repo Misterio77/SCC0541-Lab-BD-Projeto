@@ -105,7 +105,13 @@ impl From<User> for Cookie<'_> {
 #[async_trait::async_trait]
 pub trait SpecializedUser {
     type Output;
+    /// Obter o usuário especializado a partir do genérico
     async fn from_user(db: &Client, user: &User) -> Result<Self::Output, ServerError>;
+    type Metrics;
+    /// Obter métricas que ele tem acesso
+    async fn get_metrics(&self, db: &Client) -> Result<Self::Metrics, ServerError>;
+    /// Obter o nome que ele deve ver
+    fn display_name(&self) -> String;
 }
 
 /// Quando uma rota requisita User, esse traço vai rodar

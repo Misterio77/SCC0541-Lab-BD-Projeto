@@ -44,6 +44,9 @@ article {
       max-width: 30em;
     }
   }
+  & > header {
+    margin-bottom: calc(var(--block-spacing-vertical) / 5);
+  }
   // Adicionar mais margem
   margin-top: var(--typography-spacing-vertical);
   margin-bottom: var(--typography-spacing-vertical);
@@ -56,6 +59,16 @@ button {
     display: inline;
     margin-bottom: auto;
   }
+}
+
+// Círculo bonitinho em volta das métricas
+.metric {
+  font-size: 250%;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 40em;
+  border-style: solid;
 }
 
 // Coisinha de mensagem/aviso/erro (vulgo flash)
@@ -79,4 +92,18 @@ button {
   &.warning sup {
     background-color: var(--warn-color);
   }
+}
+
+// Botão flutuante para voltar ao topo
+#back-to-top {
+  position: fixed;
+  right: calc(2*var(--spacing) + var(--scrollbar-width,0px));
+  bottom: calc(2*var(--spacing));
+  width: auto;
+  margin-bottom: 0;
+  padding: 0.75rem;
+  border-radius: 2rem;
+  box-shadow: var(--card-box-shadow);
+  line-height: 1;
+  text-align: right;
 }
