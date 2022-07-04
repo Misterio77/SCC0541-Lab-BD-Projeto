@@ -1,8 +1,8 @@
 use crate::{
     common::ServerError,
-    schema::{User, UserKind},
+    schema::{AdminUser, User, UserKind},
 };
-use rocket::{get, uri, request::FlashMessage, response::Redirect, routes, Route};
+use rocket::{get, request::FlashMessage, response::Redirect, routes, uri, Route};
 use rocket_dyn_templates::{context, Template};
 
 #[get("/overview")]
@@ -16,17 +16,16 @@ pub fn overview(user: User) -> Redirect {
 
 #[get("/overview/admin")]
 pub async fn overview_admin(
-    user: User,
+    admin_user: AdminUser,
     flash: Option<FlashMessage<'_>>,
 ) -> Result<Template, ServerError> {
-    // Verificar que o usuário é admin
-    user.is_admin()?;
-
-    let display_name = "Admin";
-
     Ok(Template::render(
         "overview-admin",
-        context! {user,flash,display_name},
+        context! {
+            display_name: admin_user.display_name(),
+            user: admin_user.into_user(),
+            flash,
+        },
     ))
 }
 
@@ -63,5 +62,10 @@ pub async fn overview_constructor(
 }
 
 pub fn routes() -> Vec<Route> {
-    routes![overview, overview_admin, overview_driver, overview_constructor]
+    routes![
+        overview,
+        overview_admin,
+        overview_driver,
+        overview_constructor
+    ]
 }
