@@ -7,7 +7,7 @@
 
 <header>
   <hgroup>
-    <h1>Overview - {{ user.kind | default(value="Admin") }}</h1>
+    <h1>Overview - {{ user.display_name }} ({{ user.kind }})</h1>
     <p>Boas vindas, <strong>{{ display_name }}</strong>, a sua dashboard.</p>
   </hgroup>
   <nav>
@@ -31,6 +31,7 @@
   </div>
 </article>
 
+{% block outer_actions %}
 <article>
   <header>
     <h2 id="actions"><a href="#actions">#</a> Ações</h2>
@@ -40,6 +41,7 @@
     {% endblock actions %}
   </div>
 </article>
+{% endblock outer_actions %}
 
 <article>
   <header>

@@ -14,7 +14,7 @@ TODO
 
 # Lista de funcionalidades e rotas
 
-- [ ] GET `/` -> Home, redireciona pra login ou overview
+- [x] GET `/` -> Home, redireciona pra login ou overview
 
 ## Autenticação
 
@@ -28,7 +28,7 @@ Apenas autenticado:
 ## Dashboard
 
 Apenas autenticado:
-- [ ] GET `/overview` -> Tela da overview
+- [x] GET `/overview` -> Tela da overview
 
 ## Ações
 
@@ -39,7 +39,7 @@ Apenas admin:
 - [ ] POST `/actions/add-driver` -> Ação de criação de driver
 
 Apenas escuderia:
-- [ ] GET `/actions/add-driver?<forename>` -> Tela de info de piloto dado nome
+- [ ] GET `/actions/show-driver?<forename>` -> Tela de info de piloto dado nome
 
 ## Relatórios
 

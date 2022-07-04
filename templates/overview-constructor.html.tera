@@ -1,5 +1,40 @@
 {% extends "overview" %}
 
-{% block dashboard %}
-Construtora
-{% endblock dashboard %}
+{% block metrics %}
+<article>
+  <hgroup>
+    <h3>Vitórias</h3>
+    <p>Nossas vitórias</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.wins }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h3>Pilotos</h3>
+    <p>Que correram conosco</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.pilots }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h3>Anos</h3>
+    <p>Período de atividade</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.first_year }} - {{ metrics.last_year }}
+  </div>
+</article>
+{% endblock metrics %}
+
+{% block actions %}
+  <a role="button" href="/actions/show-driver">Consultar piloto</a>
+{% endblock actions %}
+
+{% block reports %}
+  <a role="button" href="/reports/3">3 - Listagem de primeiros lugares de pilotos</a>
+  <a role="button" href="/reports/4">4 - Quantidade de resultados por status</a>
+{% endblock reports %}

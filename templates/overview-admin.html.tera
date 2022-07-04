@@ -3,8 +3,8 @@
 {% block metrics %}
 <article>
   <hgroup>
-    <h2>Pilotos</h2>
-    <p>Total cadastrados</p>
+    <h3>Pilotos</h3>
+    <p>Totais</p>
   </hgroup>
   <div class="metric">
     {{ metrics.drivers }}
@@ -12,8 +12,8 @@
 </article>
 <article>
   <hgroup>
-    <h2>Escuderias</h2>
-    <p>Total cadastradas</p>
+    <h3>Escuderias</h3>
+    <p>Totais</p>
   </hgroup>
   <div class="metric">
     {{ metrics.constructors }}
@@ -21,8 +21,8 @@
 </article>
 <article>
   <hgroup>
-    <h2>Corridas</h2>
-    <p>Total cadastradas</p>
+    <h3>Corridas</h3>
+    <p>Totais</p>
   </hgroup>
   <div class="metric">
     {{ metrics.races }}
@@ -30,11 +30,21 @@
 </article>
 <article>
   <hgroup>
-    <h2>Temporadas</h2>
-    <p>Total cadastradas</p>
+    <h3>Temporadas</h3>
+    <p>Totais</p>
   </hgroup>
   <div class="metric">
     {{ metrics.seasons }}
   </div>
 </article>
 {% endblock metrics %}
+
+{% block actions %}
+  <a role="button" href="/actions/add-constructor">Cadastrar Escuderias</a>
+  <a role="button" href="/actions/add-pilot">Cadastrar Pilotos</a>
+{% endblock actions %}
+
+{% block reports %}
+  <a role="button" href="/reports/1">1 - Quantidade de resultados por status</a>
+  <a role="button" href="/reports/2">2 - Aeroportos brasileiros a 100km</a>
+{% endblock reports %}

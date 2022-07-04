@@ -1,5 +1,30 @@
 {% extends "overview" %}
 
-{% block dashboard %}
-Motorista
-{% endblock dashboard %}
+{% block metrics %}
+<article>
+  <hgroup>
+    <h3>Vitórias</h3>
+    <p>Suas vitórias</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.wins }}
+  </div>
+</article>
+<article>
+  <hgroup>
+    <h3>Anos</h3>
+    <p>Período de atividade</p>
+  </hgroup>
+  <div class="metric">
+    {{ metrics.first_year }} - {{ metrics.last_year }}
+  </div>
+</article>
+{% endblock metrics %}
+
+{% block reports %}
+  <a role="button" href="/reports/5">5 - Vitórias, anos, e corridas</a>
+  <a role="button" href="/reports/6">6 - Quantidade de resultados por status</a>
+{% endblock reports %}
+
+{% block outer_actions %}
+{% endblock outer_actions %}

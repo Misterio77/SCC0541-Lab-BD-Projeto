@@ -5,6 +5,11 @@
 
 // Essa sheet contém personalizações de apresentação e estilização de alguns elementos especializados
 
+// Adicionar um pouquinho de margem nos links-botões
+a[role=button] {
+  margin-bottom: 1rem;
+}
+
 // Desabilitar o link quando ele tem aria-current=page (ou seja, marcado como a página atual)
 [aria-current=page] {
   pointer-events: none;
