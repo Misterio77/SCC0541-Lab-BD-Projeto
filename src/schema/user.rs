@@ -2,6 +2,7 @@ use crate::{
     common::ServerError,
     database::{Client, Database, Row},
 };
+use postgres_types::FromSql;
 use rocket::{
     http::{Cookie, CookieJar, Status},
     outcome::{try_outcome, IntoOutcome},
@@ -11,7 +12,7 @@ use rocket_db_pools::Connection;
 use serde::Serialize;
 
 /// Representa um usuário do sistema
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct User {
     pub id: i32,
     pub login: String,
@@ -25,7 +26,7 @@ impl User {
         db.query_one(
             "SELECT userid, login, tipo, idoriginal
             FROM users
-            WHERE id = $1",
+            WHERE userid = $1",
             &[&id],
         )
         .await?
@@ -39,25 +40,28 @@ impl User {
             WHERE login = $1 AND password = md5($2)",
             &[&login, &password],
         )
-        .await?
+        .await
+        .map_err(|e| {
+            // Adicionar mensagem amigável no erro genérico do postgres
+            ServerError::builder_from(e)
+                .message("Credenciais inválidas")
+                .code(Status::Unauthorized)
+                .build()
+        })?
         .try_into()
     }
     /// Tentar extrair o id do usuário logado dos cookies (assinados pelo servidor, então são
     /// confiáveis)
     pub async fn authenticate(db: &Client, cookies: &CookieJar<'_>) -> Result<User, ServerError> {
-        let cookie = cookies.get_private("user");
+        let cookie = cookies.get_private("user").ok_or_else(|| {
+            ServerError::builder()
+                .code(Status::Unauthorized)
+                .message("Sessão inválida. Por favor, faça login novamente")
+        })?;
 
         // Na verdade seria melhor se usássemos sessões ao invés de só guardar o ID, mas enfim, não
         // faz sentido num sistema de faz-de-conta.
-        let id = cookie
-            .ok_or_else(|| {
-                ServerError::builder()
-                    .code(Status::Unauthorized)
-                    .message("Sessão inválida. Por favor, faça login novamente")
-            })?
-            .value()
-            .parse::<i32>()
-            .unwrap();
+        let id = cookie.value().parse::<i32>().unwrap();
 
         User::from_id(db, id).await
     }
@@ -88,21 +92,26 @@ impl User {
 impl TryFrom<Row> for User {
     type Error = ServerError;
     fn try_from(row: Row) -> Result<User, ServerError> {
-        let raw_type: String = row.try_get("tipo")?;
         Ok(User {
             id: row.try_get("userid")?,
             login: row.try_get("login")?,
-            kind: raw_type.try_into()?,
+            kind: row.try_get("tipo")?,
             original_id: row.try_get("idoriginal")?,
         })
     }
 }
 
 /// Diferentes tipos de acesso
-#[derive(Serialize, PartialEq, Eq)]
+/// Temos um macro pra fazer a conversão entre o tipo do rust e o do postgres
+/// Similar a conversão já inclusa entre string, int, etc
+#[derive(Serialize, FromSql, PartialEq, Eq, Debug)]
+#[postgres(name = "usertype")]
 pub enum UserKind {
+    #[postgres(name = "Administrador")]
     Admin,
+    #[postgres(name = "Escuderia")]
     Constructor,
+    #[postgres(name = "Piloto")]
     Driver,
 }
 

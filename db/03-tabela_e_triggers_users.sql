@@ -1,6 +1,9 @@
 BEGIN;
 
-DROP TRIGGER IF EXISTS constructors_autoregister ON constructors;
+DROP TRIGGER IF EXISTS autoregister ON driver;
+DROP FUNCTION IF EXISTS register_driver_trigger;
+
+DROP TRIGGER IF EXISTS autoregister ON constructors;
 DROP FUNCTION IF EXISTS register_constructor_trigger;
 
 DROP FUNCTION IF EXISTS register_driver;
@@ -11,7 +14,7 @@ DROP TYPE IF EXISTS usertype;
 
 -- Tipo usuário e tabela
 
-CREATE TYPE usertype AS ENUM ('admin', 'constructor', 'driver');
+CREATE TYPE usertype AS ENUM ('Administrador', 'Escuderia', 'Piloto');
 
 CREATE TABLE users (
     userid integer NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -19,8 +22,8 @@ CREATE TABLE users (
     password text NOT NULL,
     tipo usertype NOT NULL,
     idoriginal integer,
-    CONSTRAINT userpk PRIMARY KEY (userid)
-    CONSTRAINT users_logink UNIQUE (login),
+    CONSTRAINT userpk PRIMARY KEY (userid),
+    CONSTRAINT users_logink UNIQUE (login)
 );
 
 -- Funções para registrar constructors e drivers
@@ -33,7 +36,7 @@ BEGIN
     SELECT EXISTS(
         SELECT idoriginal FROM users
             WHERE idoriginal = c.constructorid
-            AND tipo = 'constructor'
+            AND tipo = 'Escuderia'
     ) INTO user_exists;
 
     IF user_exists THEN
@@ -44,7 +47,7 @@ BEGIN
         DEFAULT,
         (c.constructorref || '_c'),
         md5(c.constructorref),
-        'constructor',
+        'Escuderia',
         c.constructorid
     );
 END;
@@ -58,7 +61,7 @@ BEGIN
     SELECT EXISTS(
         SELECT idoriginal FROM users
             WHERE idoriginal = d.driverid
-            AND tipo = 'driver'
+            AND tipo = 'Piloto'
     ) INTO user_exists;
 
     IF user_exists THEN
@@ -69,7 +72,7 @@ BEGIN
         DEFAULT,
         (d.driverref || '_d'),
         md5(d.driverref),
-        'driver',
+        'Piloto',
         d.driverid
     );
 END;
@@ -85,7 +88,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER constructors_autoregister AFTER INSERT ON constructors
+CREATE TRIGGER autoregister AFTER INSERT ON constructors
     FOR EACH ROW EXECUTE FUNCTION register_constructor_trigger();
 
 -- Drivers
@@ -96,7 +99,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER drivers_autoregister AFTER INSERT ON driver
+CREATE TRIGGER autoregister AFTER INSERT ON driver
     FOR EACH ROW EXECUTE FUNCTION register_driver_trigger();
 
 COMMIT;

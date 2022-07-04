@@ -14,14 +14,23 @@
         <li><a href="/">Sistema F1</a></li>
       </ul>
       <ul>
-        <li>
-          {# Botão de log in/log out #}
-          {% if loggedin %}
-            <a href="/logout">Log out</a>
-          {% else %}
-            <a href="/login">Log in</a>
-          {% endif %}
-        </li>
+        {# Botão de log in/log out #}
+        {% if user %}
+          <li>
+            {{ user.login }}
+          </li>
+          <li>
+            <form method="post" action="/logout">
+              <button class="small">Log out</button>
+            </form>
+          </li>
+        {% else %}
+          <li>
+            <form method="get" action="/login">
+              <button class="small">Log in</button>
+            </form>
+          </li>
+        {% endif %}
       </ul>
     </nav>
 

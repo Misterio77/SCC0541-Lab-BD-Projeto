@@ -5,4 +5,4 @@ template_dir = "templates"
 [default.databases.database]
 # String de conexão do postgres
 # Mais info: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
-url = "postgresql://"
+url = "postgresql:///misterio?user=misterio&host=/var/run/postgresql"

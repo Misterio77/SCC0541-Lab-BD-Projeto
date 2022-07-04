@@ -71,10 +71,10 @@ button {
     padding: 0.4rem 0.5rem;
   }
   &.success sup {
-    background-color: var(--success-color);
+    background-color: var(--ins-color);
   }
   &.error sup {
-    background-color: var(--error-color);
+    background-color: var(--del-color);
   }
   &.warning sup {
     background-color: var(--warn-color);

@@ -18,6 +18,10 @@ features = [ "tera" ]
 version = "0.1.0-rc.2"
 features = [ "deadpool_postgres" ]
 
+[dependencies.postgres-types]
+version = "0.2"
+features = [ "derive" ]
+
 [dependencies.serde]
 version = "1.0"
 features = [ "derive" ]
