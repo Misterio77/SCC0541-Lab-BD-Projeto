@@ -1,29 +1,30 @@
 use crate::{
     common::ServerError,
-    schema::{AdminUser, User, UserKind},
+    schema::{User, UserKind},
 };
 use rocket::{get, request::FlashMessage, response::Redirect, routes, uri, Route};
 use rocket_dyn_templates::{context, Template};
 
 #[get("/overview")]
 pub fn overview(user: User) -> Redirect {
-    Redirect::to(match user.kind {
-        UserKind::Admin => uri!(overview_admin),
-        UserKind::Driver => uri!(overview_driver),
-        UserKind::Constructor => uri!(overview_constructor),
+    Redirect::to(match user.inner {
+        UserKind::Admin(_) => uri!(overview_admin),
+        UserKind::Driver(_) => uri!(overview_driver),
+        UserKind::Constructor(_) => uri!(overview_constructor),
     })
 }
 
 #[get("/overview/admin")]
 pub async fn overview_admin(
-    admin_user: AdminUser,
+    user: User,
     flash: Option<FlashMessage<'_>>,
 ) -> Result<Template, ServerError> {
+    user.is_admin()?;
     Ok(Template::render(
         "overview-admin",
         context! {
-            display_name: admin_user.display_name(),
-            user: admin_user.into_user(),
+            display_name: user.display_name(),
+            user,
             flash,
         },
     ))

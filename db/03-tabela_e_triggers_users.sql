@@ -10,17 +10,17 @@ DROP FUNCTION IF EXISTS register_driver;
 DROP FUNCTION IF EXISTS register_constructor;
 
 DROP TABLE IF EXISTS users;
-DROP TYPE IF EXISTS usertype;
+DROP TYPE IF EXISTS user_type;
 
 -- Tipo usuário e tabela
 
-CREATE TYPE usertype AS ENUM ('Administrador', 'Escuderia', 'Piloto');
+CREATE TYPE user_type AS ENUM ('Administrador', 'Escuderia', 'Piloto');
 
 CREATE TABLE users (
     userid integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     login text NOT NULL,
     password text NOT NULL,
-    tipo usertype NOT NULL,
+    tipo user_type NOT NULL,
     idoriginal integer,
     CONSTRAINT userpk PRIMARY KEY (userid),
     CONSTRAINT users_logink UNIQUE (login)

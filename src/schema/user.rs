@@ -1,14 +1,15 @@
 use crate::{
     common::ServerError,
     database::{Client, Database, Row},
+    schema::{Admin, Constructor, Driver},
 };
-use postgres_types::FromSql;
 use rocket::{
     http::{Cookie, CookieJar, Status},
     outcome::{try_outcome, IntoOutcome},
     request::{self, FromRequest, Request},
 };
 use rocket_db_pools::Connection;
+use postgres_types::FromSql;
 use serde::Serialize;
 
 /// Representa um usuário do sistema
@@ -16,11 +17,25 @@ use serde::Serialize;
 pub struct User {
     pub id: i32,
     pub login: String,
-    pub kind: UserKind,
-    pub original_id: Option<i32>,
+    pub inner: UserKind,
+}
+
+/// Diferentes tipos de acesso
+///
+/// Esse enum tem tipos concretos dentro das variantes,
+/// isso cria uma espécie de polimorfismo.
+///
+/// Então, basicamente, cada User tem coisas em comum (id, login), mas também tem um tipo
+/// especializado dentro (admin, constructor, ou driver).
+#[derive(Serialize, PartialEq, Eq, Debug)]
+pub enum UserKind {
+    Admin(Admin),
+    Constructor(Constructor),
+    Driver(Driver),
 }
 
 impl User {
+    // === Construtores ===
     /// Obtém um usuário dado seu ID. Função interna.
     async fn from_id(db: &Client, id: i32) -> Result<User, ServerError> {
         db.query_one(
@@ -65,66 +80,72 @@ impl User {
 
         User::from_id(db, id).await
     }
-    /// Verifica se o usuário tem um certo tipo. Retorna um erro se não for, conveniência.
-    fn has_kind(&self, role: UserKind) -> Result<(), ServerError> {
-        if self.kind != role {
-            Err(ServerError::builder()
-                .code(Status::Forbidden)
-                .message("Você não tem permissão para acessar esse conteúdo.")
-                .into())
-        } else {
-            Ok(())
+
+    // === Métodos ===
+    /// Exibe o nome de exibição, com lógica diferente pra cada variante
+    pub fn display_name(&self) -> String {
+        match self.inner {
+            UserKind::Admin(_) => "Admin",
+            UserKind::Constructor(_) => "Constructor", // TODO
+            UserKind::Driver(_) => "Driver",           // TODO
         }
+        .into()
     }
+    /// Retorna um erro se não for admin
     pub fn is_admin(&self) -> Result<(), ServerError> {
-        self.has_kind(UserKind::Admin)
+        authorized_to_result(matches!(self.inner, UserKind::Admin(_)))
     }
+    /// Retorna um erro se não for constructor
     pub fn is_constructor(&self) -> Result<(), ServerError> {
-        self.has_kind(UserKind::Constructor)
+        authorized_to_result(matches!(self.inner, UserKind::Constructor(_)))
     }
+    /// Retorna um erro se não for driver
     pub fn is_driver(&self) -> Result<(), ServerError> {
-        self.has_kind(UserKind::Driver)
+        authorized_to_result(matches!(self.inner, UserKind::Driver(_)))
+    }
+}
+
+/// Essa função transforma uma  boolean em um Ok vazio ou um Err de permissão
+/// Assim tenho mais ergonomia pra verificar essas coisas
+fn authorized_to_result(authorized: bool) -> Result<(), ServerError> {
+    if authorized {
+        Ok(())
+    } else {
+        Err(ServerError::builder()
+            .code(Status::Forbidden)
+            .message("Você não tem permissão para acessar esse conteúdo.")
+            .build())
     }
 }
 
 /// Converter da schema da base para o nosso tipo aqui
-/// Basicamente só um mapeamento de tipos/nomes
+/// Basicamente vamos pegar os campos da query de user, e fazer a outra query do tipo interno deles
 impl TryFrom<Row> for User {
     type Error = ServerError;
     fn try_from(row: Row) -> Result<User, ServerError> {
-        Ok(User {
-            id: row.try_get("userid")?,
-            login: row.try_get("login")?,
-            kind: row.try_get("tipo")?,
-            original_id: row.try_get("idoriginal")?,
-        })
-    }
-}
-
-/// Diferentes tipos de acesso
-/// Temos um macro pra fazer a conversão entre o tipo do rust e o do postgres
-/// Similar a conversão já inclusa entre string, int, etc
-#[derive(Serialize, FromSql, PartialEq, Eq, Debug)]
-#[postgres(name = "usertype")]
-pub enum UserKind {
-    #[postgres(name = "Administrador")]
-    Admin,
-    #[postgres(name = "Escuderia")]
-    Constructor,
-    #[postgres(name = "Piloto")]
-    Driver,
-}
-
-/// Converter de string pro nosso enum
-impl TryFrom<String> for UserKind {
-    type Error = ServerError;
-    fn try_from(s: String) -> Result<UserKind, ServerError> {
-        match s.as_str() {
-            "admin" => Ok(UserKind::Admin),
-            "constructor" => Ok(UserKind::Constructor),
-            "driver" => Ok(UserKind::Driver),
-            _ => Err(ServerError::default()),
+        // Enum usado na base (sem dados dentro)
+        #[derive(FromSql)]
+        enum UserType {
+            Administrador,
+            Escuderia,
+            Piloto,
         }
+
+        // Pegar campos da row
+        let id = row.try_get("userid")?;
+        let login = row.try_get("login")?;
+        let kind = row.try_get("tipo")?;
+
+        // Pegar os tipos especificos internos
+        // TODO
+        let original_id: i32 = row.try_get("idoriginal")?;
+        let inner = match kind {
+            UserType::Administrador => UserKind::Admin(Admin),
+            UserType::Escuderia => UserKind::Constructor(Constructor),
+            UserType::Piloto => UserKind::Driver(Driver),
+        };
+
+        Ok(User { id, login, inner })
     }
 }
 

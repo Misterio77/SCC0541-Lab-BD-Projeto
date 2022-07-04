@@ -1,8 +1,8 @@
 pub mod admin;
-pub use admin::{Admin, AdminUser};
+pub use admin::Admin;
 pub mod driver;
-pub use driver::{Driver, DriverUser};
+pub use driver::Driver;
 pub mod constructor;
-pub use constructor::{Constructor, ConstructorUser};
+pub use constructor::Constructor;
 pub mod user;
 pub use user::{User, UserKind};
