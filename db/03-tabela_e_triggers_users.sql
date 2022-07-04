@@ -20,6 +20,7 @@ CREATE TABLE users (
     tipo usertype NOT NULL,
     idoriginal integer,
     CONSTRAINT userpk PRIMARY KEY (userid)
+    CONSTRAINT users_logink UNIQUE (login),
 );
 
 -- Funções para registrar constructors e drivers

@@ -9,6 +9,6 @@ fn version(_: &HashMap<String, Value>) -> tera::Result<Value> {
     Ok(Value::String(crate::VERSION.to_string()))
 }
 
-pub fn customize(engines: &mut Engines) {
+pub fn customize_tera(engines: &mut Engines) {
     engines.tera.register_function("version", version);
 }

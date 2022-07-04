@@ -12,53 +12,46 @@ TODO
 
 TODO
 
-## Checklist funcionalidades
+# Lista de funcionalidades e rotas
 
-### Usuários
-- [ ] Tabela `USERS`
-    - `userid`: sequencial
-    - `tipo`: `administrador`, `escuderia`, ou `piloto`
-    - `idoriginal`
-    - `login`:
-        - admins: `admin`
-        - escuderias: `<constructorref>_c`
-        - pilotos: `<driverref>_d`
-    - `password`
-        - Hasheada com MD5 direto pelo postgres
-        - admins: `admin`
-        - escuderias: `<constructorref>`
-        - pilotos: `<driverref>`
-- [ ] Triggers para criar usuários automaticamente
-- [ ] log_table para cada acesso ao sistema (userid, data, hora)
+- GET `/` -> Home
 
-### Telas
-- [ ] Tela de login
-- [ ] Tela de overview
-    - Apresentar nome (admin/construtora/nome do piloto)
-    - Dashboard
-    - Botões para ações possíveis
-- [ ] Tela de relatórios
+## Autenticação
 
-### Overviews
-- [ ] admins:
-    - [ ] Qtde de pilotos cadastrados
-    - [ ] Qtde de escuderias cadastradas
-    - [ ] Qtde de corridas cadastradas
-    - [ ] Qtde de temporadas cadastradas
-- [ ] escuderias:
-    - [ ] Qtde de vitórias dela
-    - [ ] Qtde de pilotos que correram por ela
-    - [ ] Primeiro e último ano com dados dela (RESULTS)
-- [ ] pilotos:
-    - [ ] Qtde de vitórias
-    - [ ] Primeiro e último ano com dados dele (RESULTS)
+Apenas não-autenticado:
+- GET `/login` -> Tela de login
+- POST `/login` -> Ação de login
 
-### Ações:
-- [ ] admins:
-    - [ ] Cadastrar escuderias (constructorref, name, nationality, url)
-    - [ ] Cadastrar pilotos (driverref, number, code, forename, surname, date of birth, nationality)
-- [ ] escuderias:
-    - [ ] Dado `forename`, mostrar piloto (caso já tenha corrido pela escuderia)
+Apenas autenticado:
+- POST `/logout` -> Ação de logout
 
-### Relatórios
-TODO: vide PDF
+## Dashboard
+
+Apenas autenticado:
+- GET `/overview` -> Tela da overview
+
+## Ações
+
+Apenas admin:
+- GET `/actions/add-constructor` -> Tela de criação de constructor
+- POST `/actions/add-constructor` -> Ação de criação de constructor
+- GET `/actions/add-driver` -> Tela de criação de driver
+- POST `/actions/add-driver` -> Ação de criação de driver
+
+Apenas escuderia:
+- GET `/actions/add-driver?<forename>` -> Tela de info de piloto dado nome
+
+## Relatórios
+
+Apenas admin:
+- GET `/reports/1` -> Resultados de corridas COUNT por status
+- GET `/reports/2` -> Coisa lá dos aeroportos
+
+Apenas escuderia:
+- GET `/reports/3` -> Listagem dos pilotos e primeiras posição
+- GET `/reports/4` -> Resultados de corridas COUNT por status somente dos seus pilotos
+
+Apenas piloto:
+- GET `/reports/5` -> Vitórias obtidas por ano e corrida c/ ROLLUP
+- GET `/reports/6` -> Resultados de corridas COUNT por status somente de si
+

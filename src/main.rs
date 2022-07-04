@@ -1,10 +1,8 @@
 use projeto_labbd::{
-    common::{style::StyleSheet, tera::customize},
+    common::{customize_tera, ServerError, StyleSheet},
     database::Database,
     routes::{assets, home},
 };
-
-use anyhow::Result;
 
 use rocket_db_pools::Database as DatabaseTrait;
 use rocket_dyn_templates::Template;
@@ -13,14 +11,14 @@ use rocket_dyn_templates::Template;
 static STYLE: &str = include_str!(concat!(env!("OUT_DIR"), "/style.css"));
 
 #[rocket::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), ServerError> {
     let rocket = rocket::build()
         // Middlewares (conexão com database e instância da template engine)
         .attach(Database::init())
-        .attach(Template::custom(customize))
+        .attach(Template::custom(customize_tera))
         // Gerenciar a folha CSS pra ser servida
         .manage(StyleSheet::new(STYLE, 86400))
-        // Rotas
+        // Conjuntos de rotas
         .mount("/assets", assets::routes())
         .mount("/", home::routes());
 
