@@ -3,7 +3,6 @@
 /// e converter entre eles.
 ///
 /// Bem overengineered, mas pq não se eu já sabia fazer?
-
 pub use rocket::{
     http::{MediaType, Status},
     outcome::{IntoOutcome, Outcome},
@@ -51,6 +50,14 @@ impl ServerError {
     pub fn flash_redirect(&self, url: &str) -> Flash<Redirect> {
         let message = self.message.as_deref().unwrap_or("Erro desconhecido.");
         Flash::error(Redirect::to(url.to_string()), message)
+    }
+
+    // Alguns erros comuns que me pego construindo toda hora
+    pub fn forbidden() -> ServerError {
+        ServerError::builder()
+            .message("Você não tem permissão para acessar esse recurso")
+            .code(Status::Forbidden)
+            .build()
     }
 }
 
@@ -149,9 +156,7 @@ impl From<rocket::error::Error> for ServerError {
 impl From<rocket_db_pools::deadpool_postgres::tokio_postgres::Error> for ServerError {
     fn from(e: rocket_db_pools::deadpool_postgres::tokio_postgres::Error) -> Self {
         let (message, code) = match e.as_db_error() {
-            Some(db_e) => {
-                (db_e.to_string(), Status::InternalServerError)
-            }
+            Some(db_e) => (db_e.to_string(), Status::InternalServerError),
             None => match e.to_string().as_str() {
                 "query returned an unexpected number of rows" => {
                     ("Recurso não encontrado".into(), Status::NotFound)

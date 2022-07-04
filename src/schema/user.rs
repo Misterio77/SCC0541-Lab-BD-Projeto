@@ -1,37 +1,35 @@
 use crate::{
     common::ServerError,
     database::{Client, Database, Row},
-    schema::{Admin, Constructor, Driver},
 };
+use postgres_types::FromSql;
 use rocket::{
     http::{Cookie, CookieJar, Status},
     outcome::{try_outcome, IntoOutcome},
     request::{self, FromRequest, Request},
 };
 use rocket_db_pools::Connection;
-use postgres_types::FromSql;
 use serde::Serialize;
 
 /// Representa um usuário do sistema
 #[derive(Serialize, Debug)]
 pub struct User {
-    pub id: i32,
+    id: i32,
     pub login: String,
-    pub inner: UserKind,
+    pub kind: UserKind,
+    original_id: Option<i32>,
 }
 
 /// Diferentes tipos de acesso
-///
-/// Esse enum tem tipos concretos dentro das variantes,
-/// isso cria uma espécie de polimorfismo.
-///
-/// Então, basicamente, cada User tem coisas em comum (id, login), mas também tem um tipo
-/// especializado dentro (admin, constructor, ou driver).
-#[derive(Serialize, PartialEq, Eq, Debug)]
+#[derive(Serialize, FromSql, PartialEq, Eq, Debug)]
+#[postgres(name = "user_type")]
 pub enum UserKind {
-    Admin(Admin),
-    Constructor(Constructor),
-    Driver(Driver),
+    #[postgres(name = "Administrador")]
+    Admin,
+    #[postgres(name = "Escuderia")]
+    Constructor,
+    #[postgres(name = "Piloto")]
+    Driver,
 }
 
 impl User {
@@ -80,72 +78,18 @@ impl User {
 
         User::from_id(db, id).await
     }
-
-    // === Métodos ===
-    /// Exibe o nome de exibição, com lógica diferente pra cada variante
-    pub fn display_name(&self) -> String {
-        match self.inner {
-            UserKind::Admin(_) => "Admin",
-            UserKind::Constructor(_) => "Constructor", // TODO
-            UserKind::Driver(_) => "Driver",           // TODO
-        }
-        .into()
-    }
-    /// Retorna um erro se não for admin
-    pub fn is_admin(&self) -> Result<(), ServerError> {
-        authorized_to_result(matches!(self.inner, UserKind::Admin(_)))
-    }
-    /// Retorna um erro se não for constructor
-    pub fn is_constructor(&self) -> Result<(), ServerError> {
-        authorized_to_result(matches!(self.inner, UserKind::Constructor(_)))
-    }
-    /// Retorna um erro se não for driver
-    pub fn is_driver(&self) -> Result<(), ServerError> {
-        authorized_to_result(matches!(self.inner, UserKind::Driver(_)))
-    }
-}
-
-/// Essa função transforma uma  boolean em um Ok vazio ou um Err de permissão
-/// Assim tenho mais ergonomia pra verificar essas coisas
-fn authorized_to_result(authorized: bool) -> Result<(), ServerError> {
-    if authorized {
-        Ok(())
-    } else {
-        Err(ServerError::builder()
-            .code(Status::Forbidden)
-            .message("Você não tem permissão para acessar esse conteúdo.")
-            .build())
-    }
 }
 
 /// Converter da schema da base para o nosso tipo aqui
-/// Basicamente vamos pegar os campos da query de user, e fazer a outra query do tipo interno deles
 impl TryFrom<Row> for User {
     type Error = ServerError;
     fn try_from(row: Row) -> Result<User, ServerError> {
-        // Enum usado na base (sem dados dentro)
-        #[derive(FromSql)]
-        enum UserType {
-            Administrador,
-            Escuderia,
-            Piloto,
-        }
-
-        // Pegar campos da row
-        let id = row.try_get("userid")?;
-        let login = row.try_get("login")?;
-        let kind = row.try_get("tipo")?;
-
-        // Pegar os tipos especificos internos
-        // TODO
-        let original_id: i32 = row.try_get("idoriginal")?;
-        let inner = match kind {
-            UserType::Administrador => UserKind::Admin(Admin),
-            UserType::Escuderia => UserKind::Constructor(Constructor),
-            UserType::Piloto => UserKind::Driver(Driver),
-        };
-
-        Ok(User { id, login, inner })
+        Ok(User {
+            id: row.try_get("userid")?,
+            login: row.try_get("login")?,
+            kind: row.try_get("tipo")?,
+            original_id: row.try_get("idoriginal")?,
+        })
     }
 }
 
@@ -155,6 +99,13 @@ impl From<User> for Cookie<'_> {
             .permanent()
             .finish()
     }
+}
+
+/// Define uma interface para tipos de usuário que podem ser obtidos a partir do User
+#[async_trait::async_trait]
+pub trait SpecializedUser {
+    type Output;
+    async fn from_user(db: &Client, user: &User) -> Result<Self::Output, ServerError>;
 }
 
 /// Quando uma rota requisita User, esse traço vai rodar

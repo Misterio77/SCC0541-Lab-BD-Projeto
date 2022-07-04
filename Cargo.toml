@@ -26,6 +26,9 @@ features = [ "derive" ]
 version = "1.0"
 features = [ "derive" ]
 
+[dependencies.async-trait]
+version = "0.1"
+
 [build-dependencies.grass]
 version = "0.10"
 default-features = false

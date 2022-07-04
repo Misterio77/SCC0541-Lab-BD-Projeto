@@ -1,5 +1,5 @@
 use crate::schema::User;
-use rocket::{uri, get, response::Redirect, routes, Route};
+use rocket::{get, response::Redirect, routes, uri, Route};
 
 #[get("/")]
 pub async fn home(user: Option<User>) -> Redirect {

@@ -49,5 +49,11 @@ pub fn unknown_error(status: Status, _: &Request) -> ServerError {
 }
 
 pub fn catchers() -> Vec<Catcher> {
-    catchers![not_found, service_unavailable, unknown_error, unauthorized, forbidden]
+    catchers![
+        not_found,
+        service_unavailable,
+        unknown_error,
+        unauthorized,
+        forbidden
+    ]
 }

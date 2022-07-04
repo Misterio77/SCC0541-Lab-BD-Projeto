@@ -1,16 +1,18 @@
 use crate::{
     common::ServerError,
-    schema::{User, UserKind},
+    database::Database,
+    schema::{Admin, Constructor, Driver, SpecializedUser, User, UserKind},
 };
 use rocket::{get, request::FlashMessage, response::Redirect, routes, uri, Route};
+use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 
 #[get("/overview")]
 pub fn overview(user: User) -> Redirect {
-    Redirect::to(match user.inner {
-        UserKind::Admin(_) => uri!(overview_admin),
-        UserKind::Driver(_) => uri!(overview_driver),
-        UserKind::Constructor(_) => uri!(overview_constructor),
+    Redirect::to(match user.kind {
+        UserKind::Admin => uri!(overview_admin),
+        UserKind::Driver => uri!(overview_driver),
+        UserKind::Constructor => uri!(overview_constructor),
     })
 }
 
@@ -18,15 +20,13 @@ pub fn overview(user: User) -> Redirect {
 pub async fn overview_admin(
     user: User,
     flash: Option<FlashMessage<'_>>,
+    db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    user.is_admin()?;
+    let admin = Admin::from_user(&db, &user).await?;
+    let display_name = "Admin";
     Ok(Template::render(
         "overview-admin",
-        context! {
-            display_name: user.display_name(),
-            user,
-            flash,
-        },
+        context! {display_name,user,flash},
     ))
 }
 
@@ -34,12 +34,10 @@ pub async fn overview_admin(
 pub async fn overview_driver(
     user: User,
     flash: Option<FlashMessage<'_>>,
+    db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    // Verificar que o usuário é motorista
-    user.is_driver()?;
-
-    let display_name = "Motorista X";
-
+    let driver = Driver::from_user(&db, &user).await?;
+    let display_name = "Driver X";
     Ok(Template::render(
         "overview-driver",
         context! {user,flash,display_name},
@@ -50,12 +48,10 @@ pub async fn overview_driver(
 pub async fn overview_constructor(
     user: User,
     flash: Option<FlashMessage<'_>>,
+    db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    // Verificar que o usuário é escuderia
-    user.is_constructor()?;
-
-    let display_name = "Construtora X";
-
+    let constructor = Constructor::from_user(&db, &user).await?;
+    let display_name = "Constructor Y";
     Ok(Template::render(
         "overview-constructor",
         context! {user,flash,display_name},
