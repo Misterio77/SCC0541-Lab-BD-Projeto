@@ -1,5 +1,6 @@
 BEGIN;
 
+/*
 DROP TRIGGER IF EXISTS autoregister ON driver;
 DROP FUNCTION IF EXISTS register_driver_trigger;
 
@@ -11,6 +12,7 @@ DROP FUNCTION IF EXISTS register_constructor;
 
 DROP TABLE IF EXISTS users;
 DROP TYPE IF EXISTS user_type;
+*/
 
 -- Tipo usuário e tabela
 

@@ -13,7 +13,7 @@
   <form method="post">
     <label>
       Usuário
-      <input {% if prev %} value="{{ prev }}" {% endif %} name="login" autocomplete="username" required autofocus />
+      <input value="{{ prev | default(value="") }}" name="login" autocomplete="username" required autofocus />
     </label>
     <label>
       Senha

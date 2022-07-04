@@ -7,7 +7,7 @@
 
 <header>
   <hgroup>
-    <h1>Overview - {{ user.display_name }} ({{ user.kind }})</h1>
+    <h1>Overview - {{ display_name }} {% if user.kind != "Admin" %} ({{ user.kind }}) {% endif %}</h1>
     <p>Boas vindas, <strong>{{ display_name }}</strong>, a sua dashboard.</p>
   </hgroup>
   <nav>

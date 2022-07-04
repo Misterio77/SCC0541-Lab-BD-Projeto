@@ -11,8 +11,8 @@ use rocket_dyn_templates::{context, Template};
 pub fn overview(user: User) -> Redirect {
     Redirect::to(match user.kind {
         UserKind::Admin => uri!(overview_admin),
-        UserKind::Driver => uri!(overview_driver),
-        UserKind::Constructor => uri!(overview_constructor),
+        UserKind::Driver => panic!(),      // uri!(overview_driver),
+        UserKind::Constructor => panic!(), // uri!(overview_constructor),
     })
 }
 
@@ -24,7 +24,7 @@ pub async fn overview_admin(
 ) -> Result<Template, ServerError> {
     let admin = Admin::from_user(&db, &user).await?;
     let metrics = admin.get_metrics(&db).await?;
-    let display_name = "Admin";
+    let display_name = admin.display_name();
 
     Ok(Template::render(
         "overview-admin",
@@ -32,39 +32,8 @@ pub async fn overview_admin(
     ))
 }
 
-#[get("/overview/driver")]
-pub async fn overview_driver(
-    user: User,
-    flash: Option<FlashMessage<'_>>,
-    db: Connection<Database>,
-) -> Result<Template, ServerError> {
-    // let driver = Driver::from_user(&db, &user).await?;
-    let display_name = "Driver X";
-    Ok(Template::render(
-        "overview-driver",
-        context! {user,flash,display_name},
-    ))
-}
-
-#[get("/overview/constructor")]
-pub async fn overview_constructor(
-    user: User,
-    flash: Option<FlashMessage<'_>>,
-    db: Connection<Database>,
-) -> Result<Template, ServerError> {
-    // let constructor = Constructor::from_user(&db, &user).await?;
-    let display_name = "Constructor Y";
-    Ok(Template::render(
-        "overview-constructor",
-        context! {user,flash,display_name},
-    ))
-}
+// TODO constructor, driver
 
 pub fn routes() -> Vec<Route> {
-    routes![
-        overview,
-        overview_admin,
-        overview_driver,
-        overview_constructor
-    ]
+    routes![overview, overview_admin]
 }

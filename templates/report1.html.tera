@@ -1,0 +1,33 @@
+{% extends "base" %}
+
+{% block title %}Relatório 1{% endblock title %}
+{% block description %}Quantidade de resultados por status{% endblock description %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/admin#reports">&lt; Relatórios</a>
+</nav>
+
+<article>
+  <header>
+    <h1>Relatório 1</h1>
+    <p>Quantidade de resultados por status</p>
+  </header>
+  <figure>
+    <table>
+      <tr>
+        <th><strong>Status</strong></th>
+        <th><strong>Contagem</strong></th>
+      </tr>
+      {% for row in report1 %}
+      <tr>
+        <td>{{ row.status }}</td>
+        <td>{{ row.count }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </figure>
+</article>
+
+{% endblock content %}

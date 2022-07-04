@@ -1,0 +1,46 @@
+{% extends "base" %}
+
+{% block title %}Relatório 2{% endblock title %}
+{% block description %}Aeroportos brasileiros num raio de 100km{% endblock description %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/admin#reports">&lt; Relatórios</a>
+</nav>
+
+<article>
+  <header>
+    <h1>Relatório 2</h1>
+    <p>Aeroportos brasileiros num raio de 100km</p>
+  </header>
+  <form>
+    <label>
+      Cidade
+      <input name="city" placeholder="Vila sésamo" value="{{ city | default(value="") }}" required>
+    </label>
+    <button>Buscar</button>
+  </form>
+  {% if city != "" %}
+  <figure>
+    <table>
+      <tr>
+        <th><strong>Cidade</strong></th>
+        <th><strong>Aeroporto</strong></th>
+        <th><strong>IATA</strong></th>
+        <th><strong>Cidade do aeroporto</strong></th>
+      </tr>
+      {% for row in report2 %}
+      <tr>
+        <td>{{ row.city_name }}</td>
+        <td>{{ row.airport_name }}</td>
+        <td>{{ row.airport_iata }}</td>
+        <td>{{ row.airport_city }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </figure>
+  {% endif %}
+</article>
+
+{% endblock content %}
