@@ -7,7 +7,7 @@ license = "AGPL-3.0-or-later"
 build = "build.rs"
 
 [dependencies.rocket]
-version = "0.5.0-rc.1"
+version = "0.5.0-rc.2"
 features = [ "secrets", "json" ]
 
 [dependencies.rocket_dyn_templates]
