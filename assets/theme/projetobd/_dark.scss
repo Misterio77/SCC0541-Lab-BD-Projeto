@@ -107,9 +107,9 @@
   // Card (<article>)
   --card-background-color: #{mix($black, $grey-900, 25%)};
   --card-border-color: #{mix($black, $grey-900, 37.5%)};
-  --card-box-shadow: 0 0.125rem 1rem #{rgba($black, 0.06)},
-    0 0.125rem 2rem #{rgba($black, 0.12)},
-    0 0 0 0.0625rem #{rgba($black, 0.036)};
+  --card-box-shadow: 0 0.125rem 1rem #{rgba($black, 0.16)},
+    0 0.125rem 2rem #{rgba($black, 0.22)},
+    0 0 0 0.0625rem #{rgba($black, 0.066)};
   --card-sectionning-background-color: #{mix($black, $grey-900, 12.5%)};
 
   // Modal (<dialog>)

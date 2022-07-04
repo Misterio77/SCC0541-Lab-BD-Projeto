@@ -1,0 +1,20 @@
+{% extends "base" %}
+
+{% block title %}Erro{% endblock title %}
+{% block description %}{{code | as_str}} - {{ description }}{% endblock %}
+
+{% block content %}
+<article>
+  <hgroup>
+    <h1>Erro: {{ code | as_str }}</h1>
+    <h2>{{ description }}</h2>
+  </hgroup>
+
+  {% if reason %}
+  <details open>
+    <summary><small>Erro detalhado:</small></summary>
+    <small><code>{{ reason }}</code></small>
+  </details>
+  {% endif %}
+</article>
+{% endblock content %}

@@ -2,11 +2,11 @@ use crate::{common::ServerError, database::Database, schema::User};
 use rocket::{
     form::{Form, FromForm},
     get,
-    http::{CookieJar, Cookie},
+    http::{Cookie, CookieJar},
     post,
     request::FlashMessage,
     response::{Flash, Redirect},
-    routes, warn, Route,
+    routes, uri, Route,
 };
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
@@ -33,7 +33,7 @@ pub fn login_screen(
 
 /// Rota POST da submissão do formulário de login
 #[post("/login", data = "<form>")]
-async fn login_submit(
+pub async fn login_submit(
     db: Connection<Database>,
     form: Form<LoginForm>,
     cookies: &CookieJar<'_>,
@@ -58,19 +58,19 @@ async fn login_submit(
 
     // Se deu tudo certo, adicionar sessão nos cookies e ir pra home
     cookies.add_private(logged_user.into());
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to(uri!(super::overview::overview)))
 }
 /// Representação do formulário de login
 #[derive(FromForm, Deserialize)]
-struct LoginForm {
+pub struct LoginForm {
     login: String,
     password: String,
 }
 
 #[post("/logout")]
-async fn logout(cookies: &CookieJar<'_>, _user: User) -> Result<Redirect, Flash<Redirect>> {
+pub fn logout(cookies: &CookieJar<'_>, _user: User) -> Result<Redirect, Flash<Redirect>> {
     cookies.remove_private(Cookie::named("user"));
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to(uri!(super::overview::overview)))
 }
 
 pub fn routes() -> Vec<Route> {

@@ -1,7 +1,7 @@
 use projeto_labbd::{
     common::{customize_tera, ServerError, StyleSheet},
     database::Database,
-    routes::{assets, home, account},
+    routes::{account, assets, errors, home, overview},
 };
 
 use rocket_db_pools::Database as DatabaseTrait;
@@ -18,10 +18,13 @@ async fn main() -> Result<(), ServerError> {
         .attach(Template::custom(customize_tera))
         // Gerenciar a folha CSS pra ser servida
         .manage(StyleSheet::new(STYLE, 86400))
+        // Rotas para apanhar erros
+        .register("/", errors::catchers())
         // Conjuntos de rotas
         .mount("/assets", assets::routes())
         .mount("/", home::routes())
-        .mount("/", account::routes());
+        .mount("/", account::routes())
+        .mount("/", overview::routes());
 
     rocket.launch().await.ok();
     Ok(())

@@ -1,10 +1,13 @@
 use crate::schema::User;
-use rocket::{get, routes, Route};
-use rocket_dyn_templates::{context, Template};
+use rocket::{uri, get, response::Redirect, routes, Route};
 
 #[get("/")]
-async fn home(user: Option<User>) -> Template {
-    Template::render("base", context! {user})
+pub async fn home(user: Option<User>) -> Redirect {
+    // Se estiver logado, ir pra dashboard. Se não, ir pro login
+    Redirect::to(match user {
+        Some(_) => uri!(super::overview::overview),
+        None => uri!(super::account::login_screen(_)),
+    })
 }
 
 pub fn routes() -> Vec<Route> {

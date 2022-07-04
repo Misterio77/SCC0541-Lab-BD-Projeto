@@ -67,7 +67,7 @@ impl User {
     }
     /// Verifica se o usuário tem um certo tipo. Retorna um erro se não for, conveniência.
     fn has_kind(&self, role: UserKind) -> Result<(), ServerError> {
-        if self.kind == role {
+        if self.kind != role {
             Err(ServerError::builder()
                 .code(Status::Forbidden)
                 .message("Você não tem permissão para acessar esse conteúdo.")

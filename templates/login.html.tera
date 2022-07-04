@@ -6,9 +6,10 @@
 {% block content%}
 
 <article class="slim">
-  <header>
+  <hgroup>
     <h1>Log in</h1>
-  </header>
+    <p>Faça login para acessar o sistema</p>
+  </hgroup>
   <form method="post">
     <label>
       Usuário

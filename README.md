@@ -14,7 +14,7 @@ TODO
 
 # Lista de funcionalidades e rotas
 
-- [ ] GET `/` -> Home
+- [ ] GET `/` -> Home, redireciona pra login ou overview
 
 ## Autenticação
 
@@ -23,7 +23,7 @@ Apenas não-autenticado:
 - [x] POST `/login` -> Ação de login
 
 Apenas autenticado:
-- [ ] POST `/logout` -> Ação de logout
+- [x] POST `/logout` -> Ação de logout
 
 ## Dashboard
 

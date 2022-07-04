@@ -1,0 +1,15 @@
+{% extends "base" %}
+
+{% block title %}Overview{% endblock title %}
+{% block description %}Sua dashboard{% endblock %}
+
+{% block content %}
+<article>
+  <hgroup>
+    <h1>Overview - {{ user.kind | default(value="Admin") }}</h1>
+    <p>Boas vindas, {{ display_name }}</p>
+  </hgroup>
+</article>
+{% block dashboard %}
+{% endblock dashboard %}
+{% endblock content %}

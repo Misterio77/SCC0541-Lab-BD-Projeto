@@ -1,13 +1,13 @@
 use crate::common::style::StyleSheet;
-use rocket::{get, response::Redirect, routes, Route, State};
+use rocket::{get, response::Redirect, routes, uri, Route, State};
 
 #[get("/style.css")]
-fn style() -> Redirect {
-    Redirect::to(format!("/assets/{}/style.css", crate::VERSION))
+pub fn style() -> Redirect {
+    Redirect::to(uri!(style_versioned(crate::VERSION)))
 }
 
 #[get("/<_version>/style.css")]
-fn style_versioned<'a>(css: &'a State<StyleSheet>, _version: String) -> &'a StyleSheet<'a> {
+pub fn style_versioned<'a>(css: &'a State<StyleSheet>, _version: String) -> &'a StyleSheet<'a> {
     css
 }
 
