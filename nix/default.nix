@@ -1,14 +1,12 @@
-{ lib, rustPlatform }:
+{ lib, system, naersk }:
 
 let manifest = (lib.importTOML ../Cargo.toml).package;
 in
-rustPlatform.buildRustPackage rec {
+naersk.lib."${system}".buildPackage {
   pname = manifest.name;
   inherit (manifest) version;
 
-  src = lib.cleanSource ../.;
-
-  cargoLock.lockFile = ../Cargo.lock;
+  root = lib.cleanSource ../.;
 
   postInstall = ''
     mkdir -p $out/etc

@@ -4,14 +4,15 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     utils.url = "github:numtide/flake-utils";
+    naersk.url = "github:nix-community/naersk";
   };
 
-  outputs = { self, nixpkgs, utils }:
+  outputs = { self, nixpkgs, utils, naersk }:
     {
       # Overlay para adicionar o projeto ao conjunto de pacotes
       overlays = rec {
         default = f: p: {
-          projeto-labbd = f.callPackage ./nix { };
+          projeto-labbd = f.callPackage ./nix { inherit naersk; };
         };
       };
       # Módulo para ser super simples criar o serviço no NixOS

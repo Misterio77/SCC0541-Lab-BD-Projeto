@@ -28,5 +28,6 @@ async fn main() -> Result<(), ServerError> {
         .mount("/", reports::routes());
 
     rocket.launch().await.ok();
+
     Ok(())
 }
