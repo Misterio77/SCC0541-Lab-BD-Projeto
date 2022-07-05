@@ -3,6 +3,10 @@
 {% block title %}Erro{% endblock title %}
 {% block description %}{{code | as_str}} - {{ description }}{% endblock %}
 
+{# Substituir o bloco de auth, pois quando chama esse template não vem o usuário, então ficaria sempre login #}
+{% block auth %}
+{% endblock auth %}
+
 {% block content %}
 <article>
   <hgroup>
