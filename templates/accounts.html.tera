@@ -1,0 +1,43 @@
+{% extends "base" %}
+
+{% block title %}Contas{% endblock title %}
+{% block description %}Lista de contas, pra facilitar sua vida{% endblock title %}
+
+{% block content%}
+
+<article>
+  <header>
+    <h1>Todas as contas</h1>
+    <p>Pra facilitar sua vida um pouquinho :)</p>
+  </header>
+  <figure>
+    {% if users is empty %}
+      Nenhuma conta :(
+    {% else %}
+      <table>
+        <tr>
+          <th><strong>Login</strong></th>
+          <th><strong>Senha</strong></th>
+          <th><strong>Tipo</strong></th>
+          <th></th>
+        </tr>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.1.login }}</td>
+            <td>{{ user.0 }}</td>
+            <td>{{ user.1.kind }}</td>
+            <td>
+              <form method="post" action="/login">
+                <input type="hidden" name="login" value="{{ user.1.login }}"/>
+                <input type="hidden" name="password" value="{{ user.0 }}"/>
+                <button>Logar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </figure>
+</article>
+
+{% endblock content %}

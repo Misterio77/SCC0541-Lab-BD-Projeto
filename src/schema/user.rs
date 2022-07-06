@@ -64,6 +64,24 @@ impl User {
         })?
         .try_into()
     }
+    pub async fn list(db: &Client) -> Result<Vec<User>, ServerError> {
+        db.query(
+            "SELECT userid, login, tipo, idoriginal
+            FROM users",
+            &[],
+        )
+        .await
+        .map_err(|e| {
+            // Adicionar mensagem amigável no erro genérico do postgres
+            ServerError::builder_from(e)
+                .message("Credenciais inválidas")
+                .code(Status::Unauthorized)
+                .build()
+        })?
+        .into_iter()
+        .map(TryInto::try_into)
+        .collect()
+    }
     // === Métodos ===
     /// Tentar extrair o id do usuário logado dos cookies (assinados pelo servidor, então são
     /// confiáveis)

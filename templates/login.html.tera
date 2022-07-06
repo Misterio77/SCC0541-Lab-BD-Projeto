@@ -23,6 +23,7 @@
       Log in
     </button>
   </form>
+  <a href="/accounts"><small>Lista de contas, pra sua conveniência</small></a>
 </article>
 
 {% endblock content %}

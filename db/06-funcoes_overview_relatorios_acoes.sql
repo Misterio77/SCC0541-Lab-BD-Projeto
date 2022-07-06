@@ -98,9 +98,10 @@ CREATE FUNCTION report_3(int)
     )
 AS $$
 BEGIN
-    RETURN QUERY SELECT (forename || ' ' || surname) AS name, COUNT(*) AS wins
+    RETURN QUERY SELECT (forename || ' ' || surname) AS name,
+        COUNT(*) FILTER (WHERE position = 1) AS wins
         FROM driver INNER JOIN results ON results.driverid = driver.driverid
-        WHERE position = 1 AND constructorid = $1
+        WHERE constructorid = $1
         GROUP BY name ORDER BY wins DESC;
 END;
 $$ LANGUAGE plpgsql;

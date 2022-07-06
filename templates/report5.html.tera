@@ -15,8 +15,10 @@
     <p>Vitórias totais, por corrida, e por ano</p>
   </header>
   <figure>
-    {% if report5 is empty %}
-      Nenhuma vitória :(
+    {% if report5 is singleton %}
+      <p>Nenhuma vitória :(</p>
+      {# Easter egg! #}
+      <img src="https://i.kym-cdn.com/photos/images/newsfeed/001/838/613/45e.jpg"/>
     {% else %}
       <table>
         <tr>
