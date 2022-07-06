@@ -1,4 +1,6 @@
 [default]
+# Porta na qual o servidor embutida irá executar
+port = 8000
 # Caminho para o diretório com os templates .tera
 template_dir = "templates"
 
