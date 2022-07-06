@@ -1,6 +1,7 @@
 -- Funções encapsulando métricas, relatórios, e ações
 BEGIN;
 
+/*
 DROP FUNCTION IF EXISTS admin_metrics;
 DROP FUNCTION IF EXISTS report_1;
 DROP FUNCTION IF EXISTS report_2;
@@ -17,6 +18,7 @@ DROP FUNCTION IF EXISTS report_5;
 DROP FUNCTION IF EXISTS report_6;
 DROP INDEX IF EXISTS results_driverid;
 DROP INDEX IF EXISTS results_position_driverid;
+*/
 
 -- === ADMIN ===
 CREATE FUNCTION admin_metrics()
