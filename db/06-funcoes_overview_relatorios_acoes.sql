@@ -155,6 +155,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- TODO: índice
 CREATE FUNCTION report_5(int)
     RETURNS TABLE (
         year int,

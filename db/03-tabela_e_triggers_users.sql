@@ -76,8 +76,7 @@ BEGIN
         RAISE EXCEPTION 'The driver "%" is already a registered user', d.driverref;
     END IF;
 
-    INSERT INTO users (userid, login, password, tipo, idoriginal) VALUES (
-        DEFAULT,
+    INSERT INTO users (login, password, tipo, idoriginal) VALUES (
         (d.driverref || '_d'),
         md5(d.driverref),
         'Piloto',

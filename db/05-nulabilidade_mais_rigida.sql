@@ -1,7 +1,7 @@
 -- Existem muitos campos nuláveis na base, que não tem nenhuma tupla com ele
 -- NULL Então vou acrescentar mais NOT NULLs onde sinto que faz sentido
 
--- Também adicionamos generated no id de driver e constructor, pra possibilitar inserção
+-- Também adicionamos generated no id de driver e constructor, pra facilitar inserção
 
 BEGIN;
 
