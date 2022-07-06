@@ -15,6 +15,7 @@ DROP FUNCTION IF EXISTS drivers_by_forename;
 DROP FUNCTION IF EXISTS driver_metrics;
 DROP FUNCTION IF EXISTS report_5;
 DROP FUNCTION IF EXISTS report_6;
+DROP INDEX IF EXISTS results_driverid;
 DROP INDEX IF EXISTS results_position_driverid;
 
 -- === ADMIN ===
@@ -96,7 +97,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE INDEX results_constructorid ON results (constructorid);
+CREATE INDEX results_constructorid ON results (constructorid); -- Esse ajuda também na metrics!
 CREATE FUNCTION report_3(int)
     RETURNS TABLE (
         name text,
@@ -160,7 +161,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE INDEX results_position_driverid ON results (position, driverid);
+CREATE INDEX results_driverid ON results (driverid); -- Esse funciona tanto no report quanto nas métricas
+-- CREATE INDEX results_position_driverid ON results (position, driverid); -- Esse funciona só no report
 CREATE FUNCTION report_5(int)
     RETURNS TABLE (
         year int,
