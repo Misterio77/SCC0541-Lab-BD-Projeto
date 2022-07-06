@@ -4,13 +4,18 @@ BEGIN;
 DROP FUNCTION IF EXISTS admin_metrics;
 DROP FUNCTION IF EXISTS report_1;
 DROP FUNCTION IF EXISTS report_2;
+DROP INDEX IF EXISTS airports_type_isocountry;
+
 DROP FUNCTION IF EXISTS constructor_metrics;
 DROP FUNCTION IF EXISTS report_3;
 DROP FUNCTION IF EXISTS report_4;
+DROP INDEX IF EXISTS results_constructorid;
+
 DROP FUNCTION IF EXISTS drivers_by_forename;
 DROP FUNCTION IF EXISTS driver_metrics;
 DROP FUNCTION IF EXISTS report_5;
 DROP FUNCTION IF EXISTS report_6;
+DROP INDEX IF EXISTS results_position_driverid;
 
 -- === ADMIN ===
 CREATE FUNCTION admin_metrics()
@@ -43,7 +48,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- TODO: índice
+CREATE INDEX airports_type_isocountry ON airports (type, isocountry);
 CREATE FUNCTION report_2(text)
     RETURNS TABLE (
         city_name text,
@@ -91,7 +96,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- TODO: índice
+CREATE INDEX results_constructorid ON results (constructorid);
 CREATE FUNCTION report_3(int)
     RETURNS TABLE (
         name text,
@@ -155,7 +160,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- TODO: índice
+CREATE INDEX results_position_driverid ON results (position, driverid);
 CREATE FUNCTION report_5(int)
     RETURNS TABLE (
         year int,
