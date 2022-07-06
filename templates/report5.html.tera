@@ -1,0 +1,39 @@
+{% extends "base" %}
+
+{% block title %}Relatório 5{% endblock title %}
+{% block description %}Vitórias totais, por corrida, e por ano{% endblock description %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/driver#reports">&lt; Relatórios</a>
+</nav>
+
+<article>
+  <header>
+    <h1>Relatório 5</h1>
+    <p>Vitórias totais, por corrida, e por ano</p>
+  </header>
+  <figure>
+    {% if report5 is empty %}
+      Nenhuma vitória :(
+    {% else %}
+      <table>
+        <tr>
+          <th><strong>Ano</strong></th>
+          <th><strong>Corrida</strong></th>
+          <th><strong>Vitórias</strong></th>
+        </tr>
+        {% for row in report5 %}
+        <tr>
+          <td>{{ row.year | default(value="(Todos)") }}</td>
+          <td>{{ row.race | default(value="(Todas)")  }}</td>
+          <td>{{ row.wins }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </figure>
+</article>
+
+{% endblock content %}

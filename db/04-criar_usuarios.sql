@@ -1,4 +1,5 @@
--- Esse script cria usuário para os constructors e drivers que já existem, e também o admin
+-- Esse script cria usuários para os constructors e drivers que já existem, e
+-- também o usuário admin
 BEGIN;
 
 -- Criar conta p/ admin

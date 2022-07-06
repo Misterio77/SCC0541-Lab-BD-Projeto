@@ -23,22 +23,26 @@
   </form>
   {% if city != "" %}
   <figure>
-    <table>
-      <tr>
-        <th><strong>Cidade</strong></th>
-        <th><strong>Aeroporto</strong></th>
-        <th><strong>IATA</strong></th>
-        <th><strong>Cidade do aeroporto</strong></th>
-      </tr>
-      {% for row in report2 %}
-      <tr>
-        <td>{{ row.city_name }}</td>
-        <td>{{ row.airport_name }}</td>
-        <td>{{ row.airport_iata }}</td>
-        <td>{{ row.airport_city }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+    {% if report2 is empty %}
+      Nenhum aeroporto encontrado
+    {% else %}
+      <table>
+        <tr>
+          <th><strong>Cidade</strong></th>
+          <th><strong>Aeroporto</strong></th>
+          <th><strong>IATA</strong></th>
+          <th><strong>Cidade do aeroporto</strong></th>
+        </tr>
+        {% for row in report2 %}
+        <tr>
+          <td>{{ row.city_name }}</td>
+          <td>{{ row.airport_name }}</td>
+          <td>{{ row.airport_iata }}</td>
+          <td>{{ row.airport_city }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
   </figure>
   {% endif %}
 </article>

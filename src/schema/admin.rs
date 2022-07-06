@@ -1,33 +1,28 @@
 use crate::{
     common::ServerError,
     database::{Client, Row},
-    schema::{SpecializedUser, User, UserKind},
+    schema::{User, UserKind},
 };
+use rocket::http::Status;
 use serde::Serialize;
 
 #[derive(Serialize, PartialEq, Eq)]
 pub struct Admin(());
 
-#[async_trait::async_trait]
-impl SpecializedUser for Admin {
-    type Output = Admin;
-    /// Criar o admin
-    async fn from_user(_db: &Client, user: &User) -> Result<Admin, ServerError> {
-        // Pegamos a database mas não usamos, só pra manter a interface consistente
-        if user.kind == UserKind::Admin {
-            Ok(Admin(()))
-        } else {
-            Err(ServerError::forbidden())
-        }
-    }
-
-    /// Nome que deve ser exibido para o admin
-    fn display_name(&self) -> String {
+impl Admin {
+    pub fn display_name(&self) -> String {
         "Admin".into()
     }
-}
-
-impl Admin {
+    pub async fn from_user(_db: &Client, u: &User) -> Result<Admin, ServerError> {
+        if u.kind == UserKind::Admin {
+            Ok(Admin(()))
+        } else {
+            Err(ServerError::builder()
+                .code(Status::Forbidden)
+                .message("Esse usuário não é administrador.")
+                .build())
+        }
+    }
     /// Métricas que o admin tem acesso
     pub async fn get_metrics(&self, db: &Client) -> Result<AdminMetrics, ServerError> {
         db.query_one("SELECT * FROM admin_metrics()", &[])

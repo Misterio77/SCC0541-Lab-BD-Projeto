@@ -1,0 +1,39 @@
+{% extends "base" %}
+
+{% block title %}Relatório 3{% endblock title %}
+{% block description %}Pilotos que correram pela escuderia{% endblock description %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/constructor#reports">&lt; Relatórios</a>
+</nav>
+
+<article>
+  <header>
+    <h1>Relatório 3</h1>
+    <p>Pilotos que correram pela escuderia</p>
+  </header>
+  <figure>
+    {% if report3 is empty %}
+      <p>Nenhum piloto :(</p>
+      {# Easter egg! #}
+      <img src="//i.imgur.com/FY0Yv2E.png"/>
+    {% else %}
+      <table>
+        <tr>
+          <th><strong>Nome</strong></th>
+          <th><strong>Vitórias</strong></th>
+        </tr>
+        {% for row in report3 %}
+        <tr>
+          <td>{{ row.name }}</td>
+          <td>{{ row.wins }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </figure>
+</article>
+
+{% endblock content %}

@@ -5,4 +5,4 @@ pub use driver::Driver;
 pub mod constructor;
 pub use constructor::Constructor;
 pub mod user;
-pub use user::{SpecializedUser, User, UserKind};
+pub use user::{User, UserKind};

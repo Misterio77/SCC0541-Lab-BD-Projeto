@@ -16,7 +16,7 @@
     <p>Que correram conosco</p>
   </hgroup>
   <div class="metric">
-    {{ metrics.pilots }}
+    {{ metrics.drivers }}
   </div>
 </article>
 <article>

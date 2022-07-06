@@ -1,3 +1,5 @@
+-- Essa DDL adiciona a tabela usuários, o enum user_type, funções para
+-- registrar escuderias e pilotos existentes, e os triggers que as executam.
 BEGIN;
 
 /*
@@ -45,8 +47,7 @@ BEGIN
         RAISE EXCEPTION 'The constructor "%" is already a registered user', c.constructorref;
     END IF;
 
-    INSERT INTO users (userid, login, password, tipo, idoriginal) VALUES (
-        DEFAULT,
+    INSERT INTO users (login, password, tipo, idoriginal) VALUES (
         (c.constructorref || '_c'),
         md5(c.constructorref),
         'Escuderia',

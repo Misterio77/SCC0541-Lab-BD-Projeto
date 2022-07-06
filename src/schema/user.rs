@@ -1,6 +1,7 @@
 use crate::{
     common::ServerError,
     database::{Client, Database, Row},
+    schema::{Admin, Constructor},
 };
 use postgres_types::FromSql;
 use rocket::{
@@ -14,10 +15,10 @@ use serde::Serialize;
 /// Representa um usuário do sistema
 #[derive(Serialize, Debug)]
 pub struct User {
-    id: i32,
+    pub id: i32,
     pub login: String,
     pub kind: UserKind,
-    original_id: Option<i32>,
+    pub original_id: Option<i32>,
 }
 
 /// Diferentes tipos de acesso
@@ -63,6 +64,7 @@ impl User {
         })?
         .try_into()
     }
+    // === Métodos ===
     /// Tentar extrair o id do usuário logado dos cookies (assinados pelo servidor, então são
     /// confiáveis)
     pub async fn authenticate(db: &Client, cookies: &CookieJar<'_>) -> Result<User, ServerError> {
@@ -77,6 +79,14 @@ impl User {
         let id = cookie.value().parse::<i32>().unwrap();
 
         User::from_id(db, id).await
+    }
+    /// Retornar uma instância de admin, caso o usuário seja um
+    pub async fn get_admin(&self, db: &Client) -> Result<Admin, ServerError> {
+        Admin::from_user(db, self).await
+    }
+    /// Retornar uma instância de constructor, caso o usuário seja um
+    pub async fn get_constructor(&self, db: &Client) -> Result<Constructor, ServerError> {
+        Constructor::from_user(db, self).await
     }
 }
 
@@ -99,16 +109,6 @@ impl From<User> for Cookie<'_> {
             .permanent()
             .finish()
     }
-}
-
-/// Define uma interface para tipos de usuário que podem ser obtidos a partir do User
-#[async_trait::async_trait]
-pub trait SpecializedUser {
-    type Output;
-    /// Obter o usuário especializado a partir do genérico
-    async fn from_user(db: &Client, user: &User) -> Result<Self::Output, ServerError>;
-    /// Obter o nome que ele deve ver
-    fn display_name(&self) -> String;
 }
 
 /// Quando uma rota requisita User, esse traço vai rodar

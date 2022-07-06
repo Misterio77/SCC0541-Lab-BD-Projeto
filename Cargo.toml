@@ -20,7 +20,7 @@ features = [ "deadpool_postgres" ]
 
 [dependencies.postgres-types]
 version = "0.2"
-features = [ "derive" ]
+features = [ "derive", "with-chrono-0_4" ]
 
 [dependencies.serde]
 version = "1.0"
@@ -28,6 +28,10 @@ features = [ "derive" ]
 
 [dependencies.async-trait]
 version = "0.1"
+
+[dependencies.chrono]
+version = "0.4"
+features = [ "serde" ]
 
 [build-dependencies.grass]
 version = "0.10"
