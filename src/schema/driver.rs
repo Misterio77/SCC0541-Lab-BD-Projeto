@@ -21,9 +21,6 @@ pub struct Driver {
 }
 
 impl Driver {
-    pub fn display_name(&self) -> String {
-        format!("{} {}", self.forename, self.surname)
-    }
     pub async fn from_user(db: &Client, user: &User) -> Result<Driver, ServerError> {
         if user.kind == UserKind::Driver {
             let id = user.original_id.ok_or_else(|| {
@@ -43,6 +40,9 @@ impl Driver {
                 .message("Esse usuário não é um piloto.")
                 .build())
         }
+    }
+    pub fn display_name(&self) -> String {
+        format!("{} {}", self.forename, self.surname)
     }
     /// Métricas que o piloto tem acesso
     pub async fn get_metrics(&self, db: &Client) -> Result<DriverMetrics, ServerError> {

@@ -7,6 +7,7 @@ DROP FUNCTION IF EXISTS report_2;
 DROP FUNCTION IF EXISTS constructor_metrics;
 DROP FUNCTION IF EXISTS report_3;
 DROP FUNCTION IF EXISTS report_4;
+DROP FUNCTION IF EXISTS drivers_by_forename;
 DROP FUNCTION IF EXISTS driver_metrics;
 DROP FUNCTION IF EXISTS report_5;
 DROP FUNCTION IF EXISTS report_6;
@@ -117,6 +118,17 @@ BEGIN
         FROM results r INNER JOIN status s ON s.statusid = r.statusid
         WHERE constructorid = $1
         GROUP BY s.status, s.statusid ORDER BY s.statusid;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION drivers_by_forename(int, text)
+    RETURNS SETOF driver
+AS $$
+BEGIN
+    RETURN QUERY SELECT DISTINCT driver.*
+        FROM driver INNER JOIN results ON results.driverid = driver.driverid
+        WHERE constructorid = $1 AND forename = $2
+        ORDER BY surname;
 END;
 $$ LANGUAGE plpgsql;
 -- === FIM ESCUDERIA ===

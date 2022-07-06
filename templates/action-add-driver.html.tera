@@ -1,0 +1,56 @@
+{% extends "base" %}
+
+{% block title %}Adicionar piloto{% endblock title %}
+{% block description %}Registrar um novo piloto no sistema{% endblock title %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/admin#actions">&lt; Ações</a>
+</nav>
+
+<article>
+  <hgroup>
+    <h1>Adicionar piloto</h1>
+    <p>Registrar um novo piloto no sistema</p>
+  </hgroup>
+  <form method="post">
+    <label>
+      Nome
+      <input type="text" name="forename" placeholder="Fulano" required/>
+    </label>
+    <label>
+      Sobrenome
+      <input type="text" name="surname" placeholder="da Silva" required/>
+    </label>
+    <label>
+      Nascimento
+      <input type="date" name="dob" required/>
+    </label>
+    <label>
+      Nacionalidade
+      <input type="text" name="nationality" placeholder="Brazilian" required/>
+    </label>
+    <label>
+      Referência
+      <input type="text" name="reference" placeholder="fulano" required/>
+    </label>
+    <label>
+      Número (opcional)
+      <input type="number" name="number" placeholder="123"/>
+    </label>
+    <label>
+      Código (opcional)
+      <input type="text" maxlength="3" name="code" placeholder="FUL"/>
+    </label>
+    <label>
+      URL (opcional)
+      <input type="url" name="url" placeholder="https://example.com"/>
+    </label>
+    <button>
+      Registrar
+    </button>
+  </form>
+</article>
+
+{% endblock content %}

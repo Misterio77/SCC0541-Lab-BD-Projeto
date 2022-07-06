@@ -31,7 +31,7 @@
 {% endblock metrics %}
 
 {% block actions %}
-  <a role="button" href="/actions/show-driver">Consultar piloto</a>
+  <a role="button" href="/actions/get-driver">Buscar piloto</a>
 {% endblock actions %}
 
 {% block reports %}

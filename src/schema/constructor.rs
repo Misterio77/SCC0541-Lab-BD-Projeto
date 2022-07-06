@@ -1,7 +1,7 @@
 use crate::{
     common::ServerError,
     database::{Client, Row},
-    schema::{User, UserKind},
+    schema::{User, UserKind, Driver},
 };
 use rocket::http::Status;
 use serde::Serialize;
@@ -56,6 +56,14 @@ impl Constructor {
     /// Relatório 4
     pub async fn get_report4(&self, db: &Client) -> Result<Vec<Report4>, ServerError> {
         db.query("SELECT * FROM report_4($1)", &[&self.id])
+            .await?
+            .into_iter()
+            .map(TryInto::try_into)
+            .collect()
+    }
+    /// Obter pilotos por primeiro nome
+    pub async fn drivers_by_forename(&self, db: &Client, forename: &str) -> Result<Vec<Driver>, ServerError> {
+        db.query("SELECT * FROM drivers_by_forename($1, $2)", &[&self.id, &forename])
             .await?
             .into_iter()
             .map(TryInto::try_into)

@@ -14,7 +14,7 @@ use serde::Deserialize;
 
 /// Rota GET da tela de login
 #[get("/login?<prev>")]
-pub fn login_screen(
+pub fn login(
     prev: Option<String>, // Esse cara é o ultimo login que foi usado, pra pré-preencher o campo
     user: Option<User>,
     flash: Option<FlashMessage<'_>>,
@@ -65,5 +65,5 @@ pub struct LoginForm {
 }
 
 pub fn routes() -> Vec<Route> {
-    routes![login_screen, login_submit]
+    routes![login, login_submit]
 }

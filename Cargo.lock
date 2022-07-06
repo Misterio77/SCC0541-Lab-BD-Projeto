@@ -1541,6 +1541,7 @@ dependencies = [
  "fallible-iterator",
  "postgres-derive",
  "postgres-protocol",
+ "time 0.3.11",
 ]
 
 [[package]]
@@ -1589,6 +1590,7 @@ dependencies = [
  "rocket_db_pools",
  "rocket_dyn_templates",
  "serde",
+ "time 0.3.11",
  "timeago",
 ]
 
@@ -2198,6 +2200,7 @@ dependencies = [
  "itoa",
  "libc",
  "num_threads",
+ "serde",
  "time-macros",
 ]
 

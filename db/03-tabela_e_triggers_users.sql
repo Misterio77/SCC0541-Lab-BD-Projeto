@@ -2,7 +2,6 @@
 -- registrar escuderias e pilotos existentes, e os triggers que as executam.
 BEGIN;
 
-/*
 DROP TRIGGER IF EXISTS autoregister ON driver;
 DROP FUNCTION IF EXISTS register_driver_trigger;
 
@@ -12,9 +11,9 @@ DROP FUNCTION IF EXISTS register_constructor_trigger;
 DROP FUNCTION IF EXISTS register_driver;
 DROP FUNCTION IF EXISTS register_constructor;
 
+DROP TABLE IF EXISTS log_table;
 DROP TABLE IF EXISTS users;
 DROP TYPE IF EXISTS user_type;
-*/
 
 -- Tipo usuário e tabela
 
@@ -93,22 +92,22 @@ $$ LANGUAGE plpgsql;
 CREATE FUNCTION register_constructor_trigger() RETURNS trigger AS $$
 BEGIN
     PERFORM register_constructor(NEW);
-    RETURN NULL;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER autoregister AFTER INSERT ON constructors
+CREATE TRIGGER autoregister BEFORE INSERT ON constructors
     FOR EACH ROW EXECUTE FUNCTION register_constructor_trigger();
 
 -- Drivers
 CREATE FUNCTION register_driver_trigger() RETURNS trigger AS $$
 BEGIN
     PERFORM register_driver(NEW);
-    RETURN NULL;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER autoregister AFTER INSERT ON driver
+CREATE TRIGGER autoregister BEFORE INSERT ON driver
     FOR EACH ROW EXECUTE FUNCTION register_driver_trigger();
 
 COMMIT;

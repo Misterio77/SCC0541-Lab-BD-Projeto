@@ -1,6 +1,7 @@
 use crate::{
     common::ServerError,
     database::{Client, Row},
+    routes::actions::{AddConstructorForm, AddDriverForm},
     schema::{User, UserKind},
 };
 use rocket::http::Status;
@@ -44,6 +45,26 @@ impl Admin {
             .into_iter()
             .map(TryInto::try_into)
             .collect()
+    }
+    pub async fn add_driver(&self, db: &Client, form: AddDriverForm) -> Result<(), ServerError> {
+        db.execute(
+            "INSERT INTO driver (driverref, number, code, forename, surname, dob, nationality) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+            &[&form.reference, &form.number, &form.code, &form.forename, &form.surname, &form.dob, &form.nationality]
+        )
+        .await?;
+        Ok(())
+    }
+    pub async fn add_constructor(
+        &self,
+        db: &Client,
+        form: AddConstructorForm,
+    ) -> Result<(), ServerError> {
+        db.execute(
+            "INSERT INTO constructors (constructorref, name, nationality, url) VALUES ($1, $2, $3, $4)",
+            &[&form.reference, &form.name, &form.nationality, &form.url]
+        )
+        .await?;
+        Ok(())
     }
 }
 

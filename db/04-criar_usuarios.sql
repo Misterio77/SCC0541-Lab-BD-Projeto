@@ -2,11 +2,15 @@
 -- também o usuário admin
 BEGIN;
 
--- Criar conta p/ admin
-INSERT INTO users (login, password, tipo) VALUES ('admin', md5('admin'), 'Administrador');
--- Criar contas p/ construtores
-SELECT register_constructor(constructors.*) FROM constructors;
--- Criar contas p/ pilotos
-SELECT register_driver(driver.*) FROM driver;
+DO $$
+BEGIN
+    -- Criar conta p/ admin
+    INSERT INTO users (login, password, tipo) VALUES ('admin', md5('admin'), 'Administrador');
+    -- Criar contas p/ construtores
+    PERFORM register_constructor(constructors.*) FROM constructors;
+    -- Criar contas p/ pilotos
+    PERFORM register_driver(driver.*) FROM driver;
+END
+$$ LANGUAGE plpgsql;
 
 COMMIT;

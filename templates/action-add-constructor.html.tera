@@ -1,0 +1,40 @@
+{% extends "base" %}
+
+{% block title %}Adicionar escuderia{% endblock title %}
+{% block description %}Registrar uma nova escuderia no sistema{% endblock title %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/admin#actions">&lt; Ações</a>
+</nav>
+
+<article>
+  <hgroup>
+    <h1>Adicionar escuderia</h1>
+    <p>Registrar uma nova escuderia no sistema</p>
+  </hgroup>
+  <form method="post">
+    <label>
+      Nome
+      <input type="text" name="name" placeholder="Fiaaaaum" required/>
+    </label>
+    <label>
+      Nacionalidade
+      <input type="text" name="nationality" placeholder="Brazilian" required/>
+    </label>
+    <label>
+      Referência
+      <input type="text" name="reference" placeholder="fiaum" required/>
+    </label>
+    <label>
+      URL (opcional)
+      <input type="url" name="url" placeholder="https://example.com"/>
+    </label>
+    <button>
+      Registrar
+    </button>
+  </form>
+</article>
+
+{% endblock content %}

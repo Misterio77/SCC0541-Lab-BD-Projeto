@@ -41,7 +41,7 @@
 
 {% block actions %}
   <a role="button" href="/actions/add-constructor">Cadastrar Escuderias</a>
-  <a role="button" href="/actions/add-pilot">Cadastrar Pilotos</a>
+  <a role="button" href="/actions/add-driver">Cadastrar Pilotos</a>
 {% endblock actions %}
 
 {% block reports %}

@@ -1,0 +1,48 @@
+{% extends "base" %}
+
+{% block title %}Buscar piloto{% endblock title %}
+{% block description %}Buscar um piloo que correu conosco{% endblock description %}
+
+{% block content %}
+
+<nav>
+  <a href="/overview/constructor#actions">&lt; Ações</a>
+</nav>
+
+<article>
+  <header>
+    <h1>Buscar</h1>
+    <p>Buscar um piloto que correu conosco</p>
+  </header>
+  <form>
+    <label>
+      Primeiro nome
+      <input name="forename" placeholder="Igor" value="{{ forename | default(value="") }}" required>
+    </label>
+    <button>Buscar</button>
+  </form>
+  {% if forename != "" %}
+  <figure>
+    {% if drivers is empty %}
+      Nenhum piloto encontrado
+    {% else %}
+      <table>
+        <tr>
+          <th><strong>Nome</strong></th>
+          <th><strong>Nascimento</strong></th>
+          <th><strong>Nacionalidade</strong></th>
+        </tr>
+        {% for driver in drivers %}
+        <tr>
+          <td>{{ driver.forename }} {{ driver.surname }}</td>
+          <td>{{ driver.dob }}</td>
+          <td>{{ driver.nationality }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </figure>
+  {% endif %}
+</article>
+
+{% endblock content %}

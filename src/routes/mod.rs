@@ -1,4 +1,5 @@
 pub mod accounts;
+pub mod actions;
 pub mod assets;
 pub mod errors;
 pub mod home;
