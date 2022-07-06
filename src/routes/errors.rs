@@ -3,7 +3,7 @@ use rocket::{
     catch, catchers,
     http::Status,
     response::{Flash, Redirect},
-    Catcher, Request,
+    uri, Catcher, Request,
 };
 
 #[catch(401)]
@@ -13,7 +13,7 @@ pub fn unauthorized() -> Flash<Redirect> {
         .message("Faça login antes")
         .build();
 
-    error.flash_redirect("/login")
+    error.flash_redirect(uri!(super::login::login(_)))
 }
 
 #[catch(403)]

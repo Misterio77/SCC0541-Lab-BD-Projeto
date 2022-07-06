@@ -24,7 +24,7 @@ pub fn login(
         Err(ServerError::builder()
             .message("Você já está logado")
             .build()
-            .flash_redirect("/"))
+            .flash_redirect(uri!(super::overview::overview)))
     // Se não, mostrar a tela de login
     } else {
         Ok(Template::render("login", context! {flash, prev}))
@@ -51,7 +51,7 @@ pub async fn login_submit(
     let logged_user = User::login(&db, &login, &password)
         .await
         // Se der ruim, redirecionar pro login com a tentativa atual como login pré-preenchido
-        .map_err(|e| e.flash_redirect(&format!("/login?prev={}", &login)))?;
+        .map_err(|e| e.flash_redirect(uri!(login(prev = Some(login)))))?;
 
     // Se deu tudo certo, adicionar sessão nos cookies e ir pra home
     cookies.add_private(logged_user.into());

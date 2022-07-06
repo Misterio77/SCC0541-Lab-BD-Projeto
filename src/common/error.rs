@@ -4,7 +4,7 @@
 ///
 /// Bem overengineered, mas pq não se eu já sabia fazer?
 pub use rocket::{
-    http::{MediaType, Status},
+    http::{uri::Reference, MediaType, Status},
     outcome::{IntoOutcome, Outcome},
     response::{Responder, Response},
 };
@@ -43,13 +43,12 @@ impl ServerError {
     pub fn builder_from<T: Into<ServerError>>(source: T) -> ServerErrorBuilder {
         source.into().edit()
     }
-
     /// Transforma num Flash<Redirect>
     /// A maioria das coisas que podem dar errado vão ser exibidas como um redirecionamento +
     /// mensagem de erro amigável (vulgo flash)
-    pub fn flash_redirect(&self, url: &str) -> Flash<Redirect> {
+    pub fn flash_redirect<U: TryInto<Reference<'static>>>(&self, uri: U) -> Flash<Redirect> {
         let message = self.message.as_deref().unwrap_or("Erro desconhecido.");
-        Flash::error(Redirect::to(url.to_string()), message)
+        Flash::error(Redirect::to(uri), message)
     }
 
     // Alguns erros comuns que me pego construindo toda hora

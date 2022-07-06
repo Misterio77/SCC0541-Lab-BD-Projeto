@@ -37,11 +37,11 @@ pub async fn add_constructor_submit(
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
     let admin = Admin::from_user(&db, &user)
         .await
-        .map_err(|e| e.flash_redirect("/actions/add-constructor"))?;
+        .map_err(|e| e.flash_redirect(uri!(add_constructor)))?;
     admin
         .add_constructor(&db, form.into_inner())
         .await
-        .map_err(|e| e.flash_redirect("/actions/add-constructor"))?;
+        .map_err(|e| e.flash_redirect(uri!(add_constructor)))?;
 
     Ok(Flash::success(
         Redirect::to(uri!(add_constructor)),
@@ -76,11 +76,11 @@ pub async fn add_driver_submit(
 ) -> Result<Flash<Redirect>, Flash<Redirect>> {
     let admin = Admin::from_user(&db, &user)
         .await
-        .map_err(|e| e.flash_redirect("/actions/add-constructor"))?;
+        .map_err(|e| e.flash_redirect(uri!(add_driver)))?;
     admin
         .add_driver(&db, form.into_inner())
         .await
-        .map_err(|e| e.flash_redirect("/actions/add-constructor"))?;
+        .map_err(|e| e.flash_redirect(uri!(add_driver)))?;
 
     Ok(Flash::success(
         Redirect::to(uri!(add_driver)),
