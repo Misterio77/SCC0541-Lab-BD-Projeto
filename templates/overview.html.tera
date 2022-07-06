@@ -21,7 +21,7 @@
   <nav>
     <ul>
       <li><a href="#metrics">Métricas</a></li>
-      <li><a href="#actions">Ações</a></li>
+      {% if user.kind != "Driver" %}<li><a href="#actions">Ações</a></li>{% endif %}
       <li><a href="#reports">Relatórios</a></li>
     </ul>
   </nav>
