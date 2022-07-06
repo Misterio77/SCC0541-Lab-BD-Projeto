@@ -3,6 +3,7 @@ use crate::{
     database::Database,
     schema::{Admin, Constructor, Driver, User, UserKind},
 };
+use rocket::tokio::try_join;
 use rocket::{get, request::FlashMessage, response::Redirect, routes, uri, Route};
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
@@ -22,13 +23,13 @@ pub async fn overview_admin(
     flash: Option<FlashMessage<'_>>,
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    let admin = Admin::from_user(&db, &user).await?;
+    let (admin, last_login) = try_join!(Admin::from_user(&db, &user), user.get_last_login(&db))?;
     let metrics = admin.get_metrics(&db).await?;
     let display_name = admin.display_name();
 
     Ok(Template::render(
         "overview-admin",
-        context! {display_name,user,flash,metrics},
+        context! {display_name,user,flash,metrics,last_login},
     ))
 }
 
@@ -38,13 +39,14 @@ pub async fn overview_constructor(
     flash: Option<FlashMessage<'_>>,
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    let constructor = Constructor::from_user(&db, &user).await?;
+    let (constructor, last_login) =
+        try_join!(Constructor::from_user(&db, &user), user.get_last_login(&db))?;
     let metrics = constructor.get_metrics(&db).await?;
     let display_name = constructor.display_name();
 
     Ok(Template::render(
         "overview-constructor",
-        context! {display_name,user,flash,metrics},
+        context! {display_name,user,flash,metrics,last_login},
     ))
 }
 
@@ -54,13 +56,13 @@ pub async fn overview_driver(
     flash: Option<FlashMessage<'_>>,
     db: Connection<Database>,
 ) -> Result<Template, ServerError> {
-    let driver = Driver::from_user(&db, &user).await?;
+    let (driver, last_login) = try_join!(Driver::from_user(&db, &user), user.get_last_login(&db))?;
     let metrics = driver.get_metrics(&db).await?;
     let display_name = driver.display_name();
 
     Ok(Template::render(
         "overview-driver",
-        context! {display_name,user,flash,metrics},
+        context! {display_name,user,flash,metrics,last_login},
     ))
 }
 

@@ -8,7 +8,15 @@
 <header>
   <hgroup>
     <h1>Overview - {{ display_name }} {% if user.kind != "Admin" %} ({{ user.kind }}) {% endif %}</h1>
-    <p>Boas vindas, <strong>{{ display_name }}</strong>, a sua dashboard.</p>
+    <p>
+      Boas vindas, <strong>{{ display_name }}</strong>, a sua dashboard.
+      {% if last_login %}
+        Seu último login foi
+        <span data-tooltip="{{ last_login | date(format="%d-%m-%Y às %H:%M:%S") }}">
+          {{ last_login | humanize }}
+        </span>
+      {% endif %}
+    </p>
   </hgroup>
   <nav>
     <ul>

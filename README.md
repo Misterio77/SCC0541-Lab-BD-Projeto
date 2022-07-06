@@ -44,14 +44,14 @@ Apenas escuderia:
 ## Relatórios
 
 Apenas admin:
-- [ ] GET `/reports/1` -> Resultados de corridas COUNT por status
-- [ ] GET `/reports/2` -> Coisa lá dos aeroportos
+- [x] GET `/reports/1` -> Resultados de corridas COUNT por status
+- [x] GET `/reports/2` -> Coisa lá dos aeroportos
 
 Apenas escuderia:
-- [ ] GET `/reports/3` -> Listagem dos pilotos e primeiras posição
-- [ ] GET `/reports/4` -> Resultados de corridas COUNT por status somente dos seus pilotos
+- [x] GET `/reports/3` -> Listagem dos pilotos e primeiras posição
+- [x] GET `/reports/4` -> Resultados de corridas COUNT por status somente dos seus pilotos
 
 Apenas piloto:
-- [ ] GET `/reports/5` -> Vitórias obtidas por ano e corrida c/ ROLLUP
-- [ ] GET `/reports/6` -> Resultados de corridas COUNT por status somente de si
+- [x] GET `/reports/5` -> Vitórias obtidas por ano e corrida c/ ROLLUP
+- [x] GET `/reports/6` -> Resultados de corridas COUNT por status somente de si
 

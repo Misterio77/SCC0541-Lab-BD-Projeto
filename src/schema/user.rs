@@ -3,8 +3,10 @@ use crate::{
     database::{Client, Database, Row},
     schema::{Admin, Constructor},
 };
+use chrono::{DateTime, Utc};
 use postgres_types::FromSql;
 use rocket::{
+    warn,
     http::{Cookie, CookieJar, Status},
     outcome::{try_outcome, IntoOutcome},
     request::{self, FromRequest, Request},
@@ -48,22 +50,46 @@ impl User {
     }
     /// Obtém um usuário dado login e senha.
     pub async fn login(db: &Client, login: &str, password: &str) -> Result<User, ServerError> {
-        db.query_one(
-            "SELECT userid, login, tipo, idoriginal
-            FROM users
-            WHERE login = $1 AND password = md5($2)",
-            &[&login, &password],
-        )
-        .await
-        .map_err(|e| {
-            // Adicionar mensagem amigável no erro genérico do postgres
-            ServerError::builder_from(e)
-                .message("Credenciais inválidas")
-                .code(Status::Unauthorized)
-                .build()
-        })?
-        .try_into()
+        let user: User = db
+            .query_one(
+                "SELECT userid, login, tipo, idoriginal
+                FROM users
+                WHERE login = $1 AND password = md5($2)",
+                &[&login, &password],
+            )
+            .await
+            .map_err(|e| {
+                // Adicionar mensagem amigável no erro genérico do postgres
+                ServerError::builder_from(e)
+                    .message("Credenciais inválidas")
+                    .code(Status::Unauthorized)
+                    .build()
+            })?
+            .try_into()?;
+
+        // Adicionar log
+        db.execute("INSERT INTO log_table (userid) VALUES ($1)", &[&user.id])
+            .await?;
+
+        return Ok(user);
     }
+    /// Pegar horário do penúltimo login
+    pub async fn get_last_login(&self, db: &Client) -> Result<Option<DateTime<Utc>>, ServerError> {
+        let row = db
+            .query_opt(
+                "SELECT max(datetime)
+                FROM log_table
+                WHERE userid = $1
+                    AND datetime < (SELECT max(datetime) FROM log_table)",
+                &[&self.id],
+            )
+            .await?;
+
+        let dt = row.and_then(|r| r.try_get("max").ok());
+        warn!("{:?}", dt);
+        Ok(dt)
+    }
+    /// Listar todos os usuários
     pub async fn list(db: &Client) -> Result<Vec<User>, ServerError> {
         db.query(
             "SELECT userid, login, tipo, idoriginal

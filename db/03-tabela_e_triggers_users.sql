@@ -21,13 +21,19 @@ DROP TYPE IF EXISTS user_type;
 CREATE TYPE user_type AS ENUM ('Administrador', 'Escuderia', 'Piloto');
 
 CREATE TABLE users (
-    userid integer NOT NULL GENERATED ALWAYS AS IDENTITY,
-    login text NOT NULL,
+    userid integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    login text NOT NULL UNIQUE,
     password text NOT NULL,
     tipo user_type NOT NULL,
-    idoriginal integer,
-    CONSTRAINT userpk PRIMARY KEY (userid),
-    CONSTRAINT users_logink UNIQUE (login)
+    idoriginal integer
+);
+
+-- Tabela log
+
+CREATE TABLE log_table (
+    logid integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    userid integer NOT NULL REFERENCES users (userid),
+    datetime timestamptz NOT NULL DEFAULT now()
 );
 
 -- Funções para registrar constructors e drivers

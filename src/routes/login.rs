@@ -2,7 +2,7 @@ use crate::{common::ServerError, database::Database, schema::User};
 use rocket::{
     form::{Form, FromForm},
     get,
-    http::CookieJar,
+    http::{Cookie, CookieJar},
     post,
     request::FlashMessage,
     response::{Flash, Redirect},
@@ -39,12 +39,9 @@ pub async fn login_submit(
     cookies: &CookieJar<'_>,
     user: Option<User>,
 ) -> Result<Redirect, Flash<Redirect>> {
-    // Se já estiver logado, redirecionar
+    // Se já estiver logado, deslogar
     if user.is_some() {
-        return Err(ServerError::builder()
-            .message("Você já está logado")
-            .build()
-            .flash_redirect("/"));
+        cookies.remove_private(Cookie::named("user"));
     };
 
     // Desestruturar a struct (haha)
