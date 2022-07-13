@@ -3,16 +3,23 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
-    utils.url = "github:numtide/flake-utils";
     naersk.url = "github:nix-community/naersk";
+    naersk.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, utils, naersk }:
+  outputs = { self, nixpkgs, naersk }:
+    let
+      inherit (nixpkgs.lib) genAttrs systems;
+      forAllSystems = genAttrs systems.flakeExposed;
+      pkgsFor = forAllSystems (system: import nixpkgs {
+        inherit system; overlays = [ self.overlays.default ];
+      });
+    in
     {
       # Overlay para adicionar o projeto ao conjunto de pacotes
       overlays = rec {
-        default = f: p: {
-          projeto-labbd = f.callPackage ./nix { inherit naersk; };
+        default = final: prev: {
+          projeto-labbd = prev.callPackage ./nix { inherit naersk; };
         };
       };
       # Módulo para ser super simples criar o serviço no NixOS
@@ -20,28 +27,24 @@
         default = projeto-labbd;
         projeto-labbd = import ./nix/module.nix;
       };
-    } //
-    (utils.lib.eachDefaultSystem (system:
-      let
-        inherit (builtins) attrValues;
-        pkgs = import nixpkgs { inherit system; overlays = attrValues self.overlays; };
-      in
-      rec {
-        # Exportar o pacote (permite usar nix build e nix run)
-        packages = rec {
+
+      packages = forAllSystems (s:
+        let pkgs = pkgsFor.${s}; in
+        rec {
           inherit (pkgs) projeto-labbd;
           default = projeto-labbd;
-        };
+        });
 
-        # Shell de desenvolvimento
-        devShells = rec {
+      devShells = forAllSystems (s:
+        let pkgs = pkgsFor.${s}; in
+        rec {
           projeto-labbd = pkgs.mkShell {
-            inputsFrom = [ packages.projeto-labbd ];
+            inputsFrom = [ pkgs.projeto-labbd ];
             # Algumas ferramentas úteis
             buildInputs = with pkgs; [ rustc rust-analyzer cargo rustfmt clippy ];
           };
           default = projeto-labbd;
-        };
-      }));
+        });
+    };
 }
 
