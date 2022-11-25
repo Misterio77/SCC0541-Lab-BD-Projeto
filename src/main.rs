@@ -1,7 +1,7 @@
 use projeto_labbd::{
     common::{customize_tera, ServerError, StyleSheet},
     database::Database,
-    routes::{accounts, actions, assets, errors, home, login, logout, overview, reports},
+    routes::{accounts, actions, assets, errors, health, home, login, logout, overview, reports},
 };
 
 use rocket_db_pools::Database as DatabaseTrait;
@@ -22,6 +22,7 @@ async fn main() -> Result<(), ServerError> {
         .register("/", errors::catchers())
         // Conjuntos de rotas
         .mount("/assets", assets::routes())
+        .mount("/", health::routes())
         .mount("/", home::routes())
         .mount("/", login::routes())
         .mount("/", logout::routes())

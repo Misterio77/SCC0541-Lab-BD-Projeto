@@ -2,6 +2,7 @@ pub mod accounts;
 pub mod actions;
 pub mod assets;
 pub mod errors;
+pub mod health;
 pub mod home;
 pub mod login;
 pub mod logout;
